@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  be:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: be:v1
+    container_name: be
+    environment:
+      - APP_ENV=dev
+      - LOG_LEVEL=INFO
+      - LOG_PATH=logs/app.log
+
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_CHANNEL=suricata
+
+      - HTTPS_PORT=8000
+    ports:
+      - 8000:8000
+    networks:
+      - be_nw
+    depends_on:
+      - cache
+    logging:
+      driver: fluentd
+      options:
+        tag: docker
+
+  cache:
+    image: redis:7.0.11-alpine
+    container_name: redis
+    restart: always
+    expose:
+      - 6379
+    ports:
+      - 6379:6379
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ${HOME}/dockercompose/data/redis:/data
+    networks:
+      - be_nw
+
+networks:
+  be_nw:
+    driver: bridge
+    name: be
