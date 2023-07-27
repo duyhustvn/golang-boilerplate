@@ -39,7 +39,7 @@ func Run(app *handlers.App) {
 				panic(err)
 			}
 
-			fmt.Println(msg.Payload)
+			fmt.Println("received message: ", msg.Payload)
 		}
 	}()
 

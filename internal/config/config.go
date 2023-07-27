@@ -22,7 +22,9 @@ func GetEnv(name string) string {
 func Load() (*Config, error) {
 	var c Config
 	if err := godotenv.Load(); err != nil {
-		return nil, err
+		// no .env file
+		// load from docker-compose environment, kube ... instead
+		return &c, nil
 	}
 
 	return &c, nil
