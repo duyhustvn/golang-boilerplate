@@ -11,6 +11,7 @@ type Config struct {
 	Logger Logger
 	Redis  Redis
 	Server HTTPS
+	Kafka  Kafka
 }
 
 // GetEnv return environment variable of name "name"
