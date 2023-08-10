@@ -24,7 +24,7 @@ func NewCollector(cfg *config.Config, log logger.Logger) IMetricCollector {
 	if isStatsd {
 		flushDuration := 100 * time.Millisecond
 		if monitoringConfig.Statsd.FlushPeriod > 0 {
-			flushDuration = time.Duration(monitoringConfig.Statsd.FlushPeriod) * time.Microsecond
+			flushDuration = time.Duration(monitoringConfig.Statsd.FlushPeriod) * time.Millisecond
 		}
 
 		return statsd.NewCollector(monitoringConfig.Statsd.Addr, monitoringConfig.Statsd.Prefix, log, flushDuration)
