@@ -7,12 +7,12 @@ import (
 )
 
 type Config struct {
-	Env    Env
-	Logger Logger
-	Redis  Redis
-	Server HTTPS
-	Kafka  Kafka
-	Statds Statds
+	Env        Env
+	Logger     Logger
+	Redis      Redis
+	Server     HTTPS
+	Kafka      Kafka
+	Monitoring MonitoringConfig
 }
 
 // GetEnv return environment variable of name "name"

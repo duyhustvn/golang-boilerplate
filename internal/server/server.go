@@ -15,24 +15,24 @@ import (
 	"net/http"
 	"strings"
 	"sync"
-
-	"github.com/smira/go-statsd"
 )
 
 type Server struct {
-	Cfg     *config.Config
-	log     logger.Logger
-	metrics *metrics.Metrics
+	Cfg              *config.Config
+	log              logger.Logger
+	metricsCollector metrics.IMetricCollector
 }
 
 // GetApp returns main app
 func GetApp() *Server {
 	env, err := config.Load()
 	if err != nil {
-		log.Fatalf("Error loading config: %s\n", err)
+		log.Fatalf("Error loading config: %+v\n", err)
 	}
 
-	loadVars(env)
+	if err := loadVars(env); err != nil {
+		log.Fatalf("Error loading var: %+v\n", err)
+	}
 
 	log, err := logger.GetLogger(env)
 	if err != nil {
@@ -45,13 +45,17 @@ func GetApp() *Server {
 	}
 }
 
-func loadVars(c *config.Config) {
+func loadVars(c *config.Config) error {
+	c.Env.GetKeys()
 	c.Redis.GetRedisEnv()
 	c.Logger.GetLoggerEnv()
 	c.Server.GetHTTPSEnv()
 	c.Kafka.GetKafkaEnv()
-	c.Env.GetKeys()
-	c.Statds.GetStatdsEnv()
+	if _, err := c.Monitoring.GetMonitoringEnv(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Run the https server
@@ -59,15 +63,15 @@ func (s *Server) Run() {
 
 	rdb := redisclient.NewUniversalRedisClient(s.Cfg.Redis)
 	authCacheRepo := authrepo.NewRedisRepo(rdb, s.log)
+
 	authSvc := authsvc.NewAuthSvc(authCacheRepo, s.log)
+	s.metricsCollector = metrics.NewCollector(s.Cfg, s.log)
 
-	metricsClient := statsd.NewClient(s.Cfg.Statds.Addr, statsd.TagStyle(statsd.TagFormatInfluxDB), statsd.DefaultTags(statsd.StringTag("service_name", s.Cfg.Env.ServiceName)))
-	s.metrics = metrics.NewMetrics(metricsClient, s.Cfg)
-
-	readerMessageProcess := authkafka.NewReaderMessageProcessor(s.log, s.Cfg, authSvc, s.metrics)
+	authReaderMessageProcess := authkafka.NewReaderMessageProcessor(s.log, s.Cfg, authSvc, s.metricsCollector)
 	brokers := strings.Split(s.Cfg.Kafka.Brokers, ",")
 	cg := kafkaclient.NewConsumerGroup(brokers, s.Cfg.Kafka.GroupID, s.log)
-	go cg.ConsumeTopic(context.Background(), []string{s.Cfg.Kafka.SignupUserTopic}, s.Cfg.Kafka.PoolSize, readerMessageProcess.ProcessMessage)
+
+	go cg.ConsumeTopic(context.Background(), []string{s.Cfg.Kafka.SignupUserTopic}, s.Cfg.Kafka.PoolSize, authReaderMessageProcess.ProcessMessage)
 
 	srv := &http.Server{
 		Addr: fmt.Sprintf(":%s", s.Cfg.Server.Port),

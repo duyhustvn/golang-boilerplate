@@ -2,36 +2,34 @@ package metrics
 
 import (
 	"boilerplate/internal/config"
-	"fmt"
-
-	"github.com/smira/go-statsd"
+	"boilerplate/internal/logger"
+	"boilerplate/internal/metrics/adapter"
+	"boilerplate/internal/metrics/adapter/noop"
+	"boilerplate/internal/metrics/adapter/statsd"
+	"time"
 )
 
-type Metrics struct {
-	Client *statsd.Client
-	Cfg    *config.Config
-	// stats key
-	RegisterKafkaMessage string
-	SuccessKafkaMessage  string
-	ErrorKafkaMessage    string
-	RegisterUserDelay    string
+// IMetricCollector
+type IMetricCollector interface {
+	RegisterCounter(adapter.CollectorOptions) adapter.Counter
+	RegisterGauge(adapter.CollectorOptions) adapter.Gauge
+	RegisterTimer(adapter.CollectorOptions) adapter.Timer
+	Shutdown()
 }
 
-func NewMetrics(client *statsd.Client, cfg *config.Config) *Metrics {
-	return &Metrics{
-		Client:               client,
-		Cfg:                  cfg,
-		RegisterKafkaMessage: fmt.Sprintf("%s_register_kafka_message", cfg.Env.ServiceName),
-		SuccessKafkaMessage:  fmt.Sprintf("%s_success_processed_kafka_message_total", cfg.Env.ServiceName),
-		ErrorKafkaMessage:    fmt.Sprintf("%s_error_processed_kafka_message_total", cfg.Env.ServiceName),
-		RegisterUserDelay:    fmt.Sprintf("%s_register_delay", cfg.Env.ServiceName),
+func NewCollector(cfg *config.Config, log logger.Logger) IMetricCollector {
+	monitoringConfig := &cfg.Monitoring
+	isStatsd := monitoringConfig != nil && monitoringConfig.Statsd != nil
+
+	if isStatsd {
+		flushDuration := 100 * time.Millisecond
+		if monitoringConfig.Statsd.FlushPeriod > 0 {
+			flushDuration = time.Duration(monitoringConfig.Statsd.FlushPeriod) * time.Microsecond
+		}
+
+		return statsd.NewCollector(monitoringConfig.Statsd.Addr, monitoringConfig.Statsd.Prefix, log, flushDuration)
 	}
-}
 
-func (m *Metrics) StringTag(name, value string) statsd.Tag {
-	return statsd.StringTag(name, value)
-}
-
-func (m *Metrics) IntTag(name string, value int) statsd.Tag {
-	return statsd.IntTag(name, value)
+	log.Info("config_skipping_empty_metrics_provider")
+	return noop.NewCollector()
 }
