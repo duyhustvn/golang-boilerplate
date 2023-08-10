@@ -2,6 +2,7 @@ package authkafka
 
 import (
 	authmodel "boilerplate/internal/modules/auth/models"
+	"boilerplate/pkg/tracing"
 	"context"
 	"encoding/json"
 
@@ -10,6 +11,10 @@ import (
 
 func (s *readerMessageProcessor) processUserRegister(ctx context.Context, r *kafka.Reader, msg kafka.Message) {
 	s.log.Infof("[processUserRegister] %s", string(msg.Value))
+
+	ctx, span := tracing.StartKafkaConsumerTracerSpan(ctx, msg.Headers, "readerMessageProcessor.processUserRegister")
+	defer span.Finish()
+
 	var m authmodel.User
 	if err := json.Unmarshal(msg.Value, &m); err != nil {
 		s.log.Errorf("[processUserRegister] unmarshal message error %+v", err)
