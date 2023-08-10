@@ -3,6 +3,7 @@ package authkafka
 import (
 	"boilerplate/internal/config"
 	"boilerplate/internal/logger"
+	"boilerplate/internal/metrics"
 	authsvc "boilerplate/internal/modules/auth/service"
 	"context"
 	"sync"
@@ -14,10 +15,11 @@ type readerMessageProcessor struct {
 	log     logger.Logger
 	cfg     *config.Config
 	authSvc *authsvc.AuthSvc
+	metrics *metrics.Metrics
 }
 
-func NewReaderMessageProcessor(log logger.Logger, cfg *config.Config, authSvc *authsvc.AuthSvc) *readerMessageProcessor {
-	return &readerMessageProcessor{log: log, cfg: cfg, authSvc: authSvc}
+func NewReaderMessageProcessor(log logger.Logger, cfg *config.Config, authSvc *authsvc.AuthSvc, metrics *metrics.Metrics) *readerMessageProcessor {
+	return &readerMessageProcessor{log: log, cfg: cfg, authSvc: authSvc, metrics: metrics}
 }
 
 func (s *readerMessageProcessor) ProcessMessage(ctx context.Context, r *kafka.Reader, wg *sync.WaitGroup, workerID int) {

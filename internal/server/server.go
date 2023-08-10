@@ -3,6 +3,7 @@ package server
 import (
 	"boilerplate/internal/config"
 	"boilerplate/internal/logger"
+	"boilerplate/internal/metrics"
 	authkafka "boilerplate/internal/modules/auth/delivery/kafka"
 	authrepo "boilerplate/internal/modules/auth/repository"
 	authsvc "boilerplate/internal/modules/auth/service"
@@ -14,11 +15,14 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+
+	"github.com/smira/go-statsd"
 )
 
 type Server struct {
-	Cfg *config.Config
-	log logger.Logger
+	Cfg     *config.Config
+	log     logger.Logger
+	metrics *metrics.Metrics
 }
 
 // GetApp returns main app
@@ -47,6 +51,7 @@ func loadVars(c *config.Config) {
 	c.Server.GetHTTPSEnv()
 	c.Kafka.GetKafkaEnv()
 	c.Env.GetKeys()
+	c.Statds.GetStatdsEnv()
 }
 
 // Run the https server
@@ -56,7 +61,10 @@ func (s *Server) Run() {
 	authCacheRepo := authrepo.NewRedisRepo(rdb, s.log)
 	authSvc := authsvc.NewAuthSvc(authCacheRepo, s.log)
 
-	readerMessageProcess := authkafka.NewReaderMessageProcessor(s.log, s.Cfg, authSvc)
+	metricsClient := statsd.NewClient(s.Cfg.Statds.Addr, statsd.TagStyle(statsd.TagFormatInfluxDB), statsd.DefaultTags(statsd.StringTag("service_name", s.Cfg.Env.ServiceName)))
+	s.metrics = metrics.NewMetrics(metricsClient, s.Cfg)
+
+	readerMessageProcess := authkafka.NewReaderMessageProcessor(s.log, s.Cfg, authSvc, s.metrics)
 	brokers := strings.Split(s.Cfg.Kafka.Brokers, ",")
 	cg := kafkaclient.NewConsumerGroup(brokers, s.Cfg.Kafka.GroupID, s.log)
 	go cg.ConsumeTopic(context.Background(), []string{s.Cfg.Kafka.SignupUserTopic}, s.Cfg.Kafka.PoolSize, readerMessageProcess.ProcessMessage)

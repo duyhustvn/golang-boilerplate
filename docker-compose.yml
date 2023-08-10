@@ -8,8 +8,8 @@ services:
     image: be:v1
     container_name: be
     environment:
-      - APP_SERVICE_NAME=boilerplate
-      - APP_ENV=dev
+      - SERVICE_NAME=boilerplate
+      - SERVICE_ENV=dev
 
       - HTTPS_PORT=8000
 
