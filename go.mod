@@ -10,6 +10,7 @@ require (
 	github.com/pierrec/lz4/v4 v4.1.18 // indirect
 	github.com/redis/go-redis/v9 v9.0.5 // indirect
 	github.com/segmentio/kafka-go v0.4.42 // indirect
+	github.com/smira/go-statsd v1.3.2 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect

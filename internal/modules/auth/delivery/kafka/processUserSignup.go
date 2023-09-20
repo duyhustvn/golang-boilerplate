@@ -10,7 +10,6 @@ import (
 
 func (s *readerMessageProcessor) processUserRegister(ctx context.Context, r *kafka.Reader, msg kafka.Message) {
 	s.log.Infof("[processUserRegister] %s", string(msg.Value))
-
 	var m authmodel.User
 	if err := json.Unmarshal(msg.Value, &m); err != nil {
 		s.log.Errorf("[processUserRegister] unmarshal message error %+v", err)
