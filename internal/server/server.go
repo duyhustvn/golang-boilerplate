@@ -5,6 +5,7 @@ import (
 	"boilerplate/internal/logger"
 	"boilerplate/internal/metrics"
 	authkafka "boilerplate/internal/modules/auth/delivery/kafka"
+	authrest "boilerplate/internal/modules/auth/delivery/rest"
 	authrepo "boilerplate/internal/modules/auth/repository"
 	authsvc "boilerplate/internal/modules/auth/service"
 	kafkaclient "boilerplate/pkg/kafka"
@@ -15,9 +16,12 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+
+	"github.com/gorilla/mux"
 )
 
 type Server struct {
+	router           *mux.Router
 	Cfg              *config.Config
 	log              logger.Logger
 	metricsCollector metrics.IMetricCollector
@@ -40,8 +44,9 @@ func GetApp() *Server {
 	}
 
 	return &Server{
-		Cfg: env,
-		log: log,
+		router: mux.NewRouter(),
+		Cfg:    env,
+		log:    log,
 	}
 }
 
@@ -73,15 +78,21 @@ func (s *Server) Run() {
 
 	go cg.ConsumeTopic(context.Background(), []string{s.Cfg.Kafka.SignupUserTopic}, s.Cfg.Kafka.PoolSize, authReaderMessageProcess.ProcessMessage)
 
-	srv := &http.Server{
-		Addr: fmt.Sprintf(":%s", s.Cfg.Server.Port),
-	}
+	authHandlers := authrest.NewAuthHandlers(s.router, s.log, s.Cfg, authSvc, s.metricsCollector)
+	authHandlers.RegisterRouter()
+
+	// Healthz
+	s.router.HandleFunc("/healthz", func(w http.ResponseWriter,
+		r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "Server is running")
+	}).Methods(http.MethodGet)
 
 	runHTTP := func(wg *sync.WaitGroup) {
 		defer wg.Done()
 		log.Println((fmt.Sprintf("Listening on port: %s ...", s.Cfg.Server.Port)))
 
-		if err := srv.ListenAndServe(); err != nil {
+		if err := http.ListenAndServe(fmt.Sprintf(":%s", s.Cfg.Server.Port), s.router); err != nil {
 			log.Fatal("ListenAndServe error: ", err)
 		}
 	}
