@@ -1,12 +1,19 @@
-FROM golang:1.20-alpine AS builder
-WORKDIR /src
-COPY cmd /src/cmd
-COPY pkg /src/pkg
-COPY internal /src/internal
-COPY go.mod /src/go.mod
-COPY go.sum /src/go.sum
-RUN  go build -o main.o /src/cmd/service/main.go
+FROM golang:1.21-alpine AS builder
 
+#ARG ARG_HTTP_PROXY 127.0.0.1:1234
+#ARG ARG_HTTPS_PROXY 127.0.0.1:1234
+#
+
+WORKDIR /src
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY cmd ./cmd
+COPY pkg ./pkg
+COPY internal ./internal
+
+RUN  go build -o main.o /src/cmd/service/main.go
 
 FROM alpine:3.18.2
 WORKDIR /src
