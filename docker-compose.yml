@@ -32,7 +32,7 @@ services:
       - STATSD_FLUSH_PERIOD=100
 
     ports:
-      - 8001:8001
+      - 8001:8000
     networks:
       - be_nw
     depends_on:
