@@ -51,7 +51,6 @@ func GetApp() *Server {
 	if err != nil {
 		log.Fatalf("Cannot connect to kafka %+v", err)
 	}
-	defer kafkaConn.Close()
 
 	return &Server{
 		router:    mux.NewRouter(),
@@ -76,6 +75,8 @@ func loadVars(c *config.Config) error {
 
 // Run the https server
 func (s *Server) Run() {
+	defer s.kafkaConn.Close()
+
 	rdb := redisclient.NewUniversalRedisClient(s.Cfg.Redis)
 	authCacheRepo := authrepo.NewRedisRepo(rdb, s.log)
 
