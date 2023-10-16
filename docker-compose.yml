@@ -1,12 +1,12 @@
 version: "3"
 
 services:
-  be:
+  golang-boilerplate:
     build:
       context: .
       dockerfile: ./Dockerfile
-    image: be:v1
-    container_name: be
+    image: golang-boilerplate:v1
+    container_name: golang-boilerplate
     environment:
       - SERVICE_NAME=boilerplate
       - SERVICE_ENV=dev
@@ -76,6 +76,8 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
 
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    networks:
+      - be_nw
 
 networks:
   be_nw:

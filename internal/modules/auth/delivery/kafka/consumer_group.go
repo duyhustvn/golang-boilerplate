@@ -25,20 +25,20 @@ var (
 	metricsOnce     sync.Once
 )
 
-type readerMessageProcessor struct {
+type authMessageProcessor struct {
 	log              logger.Logger
 	cfg              *config.Config
 	authSvc          *authsvc.AuthSvc
 	metricsCollector metrics.IMetricCollector
 }
 
-func NewReaderMessageProcessor(log logger.Logger, cfg *config.Config, authSvc *authsvc.AuthSvc, metricsCollector metrics.IMetricCollector) *readerMessageProcessor {
+func NewAuthMessageProcessor(log logger.Logger, cfg *config.Config, authSvc *authsvc.AuthSvc, metricsCollector metrics.IMetricCollector) *authMessageProcessor {
 	registerMetricsOnce(metricsCollector)
 
-	return &readerMessageProcessor{log: log, cfg: cfg, authSvc: authSvc, metricsCollector: metricsCollector}
+	return &authMessageProcessor{log: log, cfg: cfg, authSvc: authSvc, metricsCollector: metricsCollector}
 }
 
-func (s *readerMessageProcessor) ProcessMessage(ctx context.Context, r *kafka.Reader, wg *sync.WaitGroup, workerID int) {
+func (s *authMessageProcessor) ProcessMessage(ctx context.Context, r *kafka.Reader, wg *sync.WaitGroup, workerID int) {
 	defer wg.Done()
 
 	for {

@@ -8,7 +8,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func (s *readerMessageProcessor) processUserRegister(ctx context.Context, r *kafka.Reader, msg kafka.Message) {
+func (s *authMessageProcessor) processUserRegister(ctx context.Context, r *kafka.Reader, msg kafka.Message) {
 	s.log.Infof("[processUserRegister] %s", string(msg.Value))
 	var m authmodel.User
 	if err := json.Unmarshal(msg.Value, &m); err != nil {

@@ -18,10 +18,12 @@ import (
 	"sync"
 
 	"github.com/gorilla/mux"
+	"github.com/segmentio/kafka-go"
 )
 
 type Server struct {
 	router           *mux.Router
+	kafkaConn        *kafka.Conn
 	Cfg              *config.Config
 	log              logger.Logger
 	metricsCollector metrics.IMetricCollector
@@ -43,10 +45,17 @@ func GetApp() *Server {
 		log.Fatalf("Error initialize custom logger: %s\n", err)
 	}
 
+	kafkaConn, err := kafkaclient.NewKafkaConnection(context.Background(), env)
+	if err != nil {
+		log.Fatalf("Cannot connect to kafka %+v", err)
+	}
+	defer kafkaConn.Close()
+
 	return &Server{
-		router: mux.NewRouter(),
-		Cfg:    env,
-		log:    log,
+		router:    mux.NewRouter(),
+		Cfg:       env,
+		log:       log,
+		kafkaConn: kafkaConn,
 	}
 }
 
@@ -65,24 +74,24 @@ func loadVars(c *config.Config) error {
 
 // Run the https server
 func (s *Server) Run() {
-
 	rdb := redisclient.NewUniversalRedisClient(s.Cfg.Redis)
 	authCacheRepo := authrepo.NewRedisRepo(rdb, s.log)
 
 	authSvc := authsvc.NewAuthSvc(authCacheRepo, s.log)
 	s.metricsCollector = metrics.NewCollector(s.Cfg, s.log)
 
-	authReaderMessageProcess := authkafka.NewReaderMessageProcessor(s.log, s.Cfg, authSvc, s.metricsCollector)
+	authReaderMessageProcess := authkafka.NewAuthMessageProcessor(s.log, s.Cfg, authSvc, s.metricsCollector)
 	brokers := strings.Split(s.Cfg.Kafka.Brokers, ",")
 	cg := kafkaclient.NewConsumerGroup(brokers, s.Cfg.Kafka.GroupID, s.log)
 
 	go cg.ConsumeTopic(context.Background(), []string{s.Cfg.Kafka.SignupUserTopic}, s.Cfg.Kafka.PoolSize, authReaderMessageProcess.ProcessMessage)
 
-	authHandlers := authrest.NewAuthHandlers(s.router, s.log, s.Cfg, authSvc, s.metricsCollector)
+	apiRouter := s.router.PathPrefix("/api").Subrouter()
+	authHandlers := authrest.NewAuthHandlers(apiRouter, s.log, s.Cfg, authSvc, s.metricsCollector)
 	authHandlers.RegisterRouter()
 
 	// Healthz
-	s.router.HandleFunc("/healthz", func(w http.ResponseWriter,
+	apiRouter.HandleFunc("/healthz", func(w http.ResponseWriter,
 		r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, "Server is running")
