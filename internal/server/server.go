@@ -8,6 +8,8 @@ import (
 	authrest "boilerplate/internal/modules/auth/delivery/rest"
 	authrepo "boilerplate/internal/modules/auth/repository"
 	authsvc "boilerplate/internal/modules/auth/service"
+	healthchecksvc "boilerplate/internal/modules/healthcheck/service"
+	healthcheckrest "boilerplate/internal/modules/healthcheck/transport/rest"
 	kafkaclient "boilerplate/pkg/kafka"
 	redisclient "boilerplate/pkg/redis"
 	"context"
@@ -87,15 +89,14 @@ func (s *Server) Run() {
 	go cg.ConsumeTopic(context.Background(), []string{s.Cfg.Kafka.SignupUserTopic}, s.Cfg.Kafka.PoolSize, authReaderMessageProcess.ProcessMessage)
 
 	apiRouter := s.router.PathPrefix("/api").Subrouter()
+
+	// Health check
+	healthCheckSvc, _ := healthchecksvc.NewHealthCheckSvc(s.log)
+	healthCheckHandlers := healthcheckrest.NewHealthCheckHandlers(apiRouter, s.log, s.Cfg, healthCheckSvc, s.metricsCollector)
+	healthCheckHandlers.RegisterRouter()
+
 	authHandlers := authrest.NewAuthHandlers(apiRouter, s.log, s.Cfg, authSvc, s.metricsCollector)
 	authHandlers.RegisterRouter()
-
-	// Healthz
-	apiRouter.HandleFunc("/healthz", func(w http.ResponseWriter,
-		r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "Server is running")
-	}).Methods(http.MethodGet)
 
 	runHTTP := func(wg *sync.WaitGroup) {
 		defer wg.Done()
