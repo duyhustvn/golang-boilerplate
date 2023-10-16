@@ -1,12 +1,11 @@
 package healthcheckrest
 
 import (
+	"boilerplate/internal/common"
 	"boilerplate/internal/config"
 	"boilerplate/internal/logger"
 	"boilerplate/internal/metrics"
 	healthchecksvc "boilerplate/internal/modules/healthcheck/service"
-	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -28,7 +27,7 @@ func (handler *healthcheckHandlers) HealthCheckHandler() func(http.ResponseWrite
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := handler.healthCheckSvc.HealthCheck()
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			common.ResponseError(w, http.StatusInternalServerError, nil, err.Error())
 			return
 		}
 
@@ -37,10 +36,7 @@ func (handler *healthcheckHandlers) HealthCheckHandler() func(http.ResponseWrite
 		}{
 			Status: "running",
 		}
-		b, _ := json.Marshal(res)
 
-		w.Header().Set("content-type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, string(b))
+		common.ResponseOk(w, http.StatusOK, res)
 	}
 }
