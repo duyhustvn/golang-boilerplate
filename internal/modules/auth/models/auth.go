@@ -3,8 +3,8 @@ package authmodel
 // User kafka message
 // {"username": "duyle", "password": "123"}
 type User struct {
-	Username string
-	Password string
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type LoginResponse struct {

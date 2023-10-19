@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"strings"
 	"sync"
 
@@ -89,6 +90,9 @@ func (s *Server) Run() {
 
 	go cg.ConsumeTopic(context.Background(), []string{s.Cfg.Kafka.SignupUserTopic}, s.Cfg.Kafka.PoolSize, authReaderMessageProcess.ProcessMessage)
 
+	// profiling go programs
+	// https://go.dev/blog/pprof
+	s.router.PathPrefix("/debug/pprof").Handler(http.DefaultServeMux)
 	apiRouter := s.router.PathPrefix("/api").Subrouter()
 
 	// Health check
@@ -101,7 +105,7 @@ func (s *Server) Run() {
 
 	runHTTP := func(wg *sync.WaitGroup) {
 		defer wg.Done()
-		log.Println((fmt.Sprintf("Listening on port: %s ...", s.Cfg.Server.Port)))
+		log.Printf("Listening on port: %s ...", s.Cfg.Server.Port)
 
 		if err := http.ListenAndServe(fmt.Sprintf(":%s", s.Cfg.Server.Port), s.router); err != nil {
 			log.Fatal("ListenAndServe error: ", err)

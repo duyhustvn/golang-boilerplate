@@ -6,6 +6,10 @@ IMG_TAG=v1
 CONTAINER_REGISTRY = docker.io
 USER = duyle95
 
+.PHONY: staticcheck
+staticcheck:
+	staticcheck ./...
+
 .PHONY: build
 build:
 	go build -o $(OBJECTS) cmd/service/main.go
