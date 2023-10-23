@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  fluent-bit:
+    build:
+      context: ./fluentbit
+      dockerfile: Dockerfile
+    container_name: fluent-bit-agent
+    restart: always
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"

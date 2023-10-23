@@ -18,6 +18,10 @@ build:
 docker-build:
 	docker build -t $(IMG):$(IMG_TAG) .
 
+.PHONY: docker-run
+docker-run:
+	cd deployments && docker compose up
+
 .PHONY: docker-push
 docker-push:
 	docker push $(CONTAINER_REGISTRY)/$(USER)/$(IMG):$(IMG_TAG)

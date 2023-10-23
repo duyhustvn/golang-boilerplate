@@ -1,0 +1,56 @@
+version: "3"
+services:
+  telegraf:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: telegraf
+    container_name: telegraf
+    restart: always
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.d/telegraf.conf:ro
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+    ports:
+      - 8125:8125
+      - 8125:8125/udp
+
+  influxdb:
+    image: influxdb:1.8-alpine
+    container_name: influxdb
+    restart: always
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin
+      - DOCKER_INFLUXDB_INIT_BUCKET=influx
+    ports:
+      - 8086:8086
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+
+  grafana:
+    image: grafana/grafana:10.0.3
+    container_name: grafana-server
+    restart: always
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=
+    links:
+      - influxdb
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  grafana_data:
+    driver: local
+
+  influxdb_data:
+    driver: local

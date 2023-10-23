@@ -15,7 +15,7 @@ type RestResponse struct {
 func ResponseOk(w http.ResponseWriter, statusCode int, data interface{}) {
 	res := &RestResponse{Status: "ok", Data: data}
 	b, err := json.Marshal(res)
-	if err == nil {
+	if err != nil {
 		ResponseError(w, http.StatusInternalServerError, nil, "invalid response")
 		return
 	}
