@@ -8,7 +8,9 @@ services:
     container_name: telegraf
     restart: always
     volumes:
-      - ./telegraf.conf:/etc/telegraf/telegraf.d/telegraf.conf:ro
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - ./jolokia-kafka.conf:/etc/telegraf/telegraf.d/jolokia-kafka.conf:ro
+      - ./redis.conf:/etc/telegraf/telegraf.d/redis.conf:ro
     depends_on:
       - influxdb
     links:

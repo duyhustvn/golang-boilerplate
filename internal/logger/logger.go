@@ -32,6 +32,7 @@ func GetLogger(env *config.Config) (log Logger, err error) {
 		"stdout",
 	}
 
+	cfg.EncoderConfig.EncodeTime = zapcore.RFC3339TimeEncoder
 	cfg.Level.SetLevel(getLevel(env.Logger.Level))
 
 	logger, err := cfg.Build()
