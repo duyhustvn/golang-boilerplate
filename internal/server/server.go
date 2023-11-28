@@ -34,28 +34,28 @@ type Server struct {
 
 // GetApp returns main app
 func GetApp() *Server {
-	env, err := config.Load()
+	cfg, err := config.Load()
 	if err != nil {
 		log.Fatalf("Error loading config: %+v\n", err)
 	}
 
-	if err := loadVars(env); err != nil {
+	if err := loadVars(cfg); err != nil {
 		log.Fatalf("Error loading var: %+v\n", err)
 	}
 
-	log, err := logger.GetLogger(env)
+	log, err := logger.GetLogger(cfg)
 	if err != nil {
 		log.Fatalf("Error initialize custom logger: %s\n", err)
 	}
 
-	kafkaConn, err := kafkaclient.NewKafkaConnection(context.Background(), env)
+	kafkaConn, err := kafkaclient.NewKafkaConnection(context.Background(), cfg)
 	if err != nil {
 		log.Fatalf("Cannot connect to kafka %+v", err)
 	}
 
 	return &Server{
 		router:    mux.NewRouter(),
-		Cfg:       env,
+		Cfg:       cfg,
 		log:       log,
 		kafkaConn: kafkaConn,
 	}
