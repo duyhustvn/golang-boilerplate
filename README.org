@@ -1,0 +1,10 @@
+#+title: Golang boilerplate
+
+* Swagger
+- Generate/update API docs
+#+begin_src shell
+swag init -g ./cmd/service/main.go
+swag init -g ./cmd/service/main.go -o ./internal/swagger
+#+end_src
+- Access swagger UI
+  Go to url *http://localhost:8001/swagger/index.html*

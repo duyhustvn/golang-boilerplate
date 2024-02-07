@@ -25,19 +25,25 @@ func NewAuthHandlers(router *mux.Router, log logger.Logger, cfg *config.Config, 
 	return &authHandlers{router: router, log: log, cfg: cfg, authSvc: authSvc, metricsCollector: metricCollector}
 }
 
-func (handler *authHandlers) Login() func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var loginUser authmodel.User
-		if err := json.NewDecoder(r.Body).Decode(&loginUser); err != nil {
-			handler.log.Errorf("[LoginHandler] Failed to parse body %+v", err)
-			common.ResponseError(w, http.StatusBadRequest, nil, "invalid body")
-			return
-		}
-
-		response := authmodel.LoginResponse{
-			AccessToken: "update logic",
-		}
-
-		common.ResponseOk(w, http.StatusCreated, response)
+// @Summary Login API
+// @Description Login
+// @Accept json
+// @Produce json
+// @Param user body authmodel.User true "User object"
+// @Success 200 {object} common.RestResponse{data=authmodel.LoginResponse}
+// @Router /api/auth/login [post]
+// @Tags Auth
+func (handler *authHandlers) Login(w http.ResponseWriter, r *http.Request) {
+	var loginUser authmodel.User
+	if err := json.NewDecoder(r.Body).Decode(&loginUser); err != nil {
+		handler.log.Errorf("[LoginHandler] Failed to parse body %+v", err)
+		common.ResponseError(w, http.StatusBadRequest, nil, "invalid body")
+		return
 	}
+
+	response := authmodel.LoginResponse{
+		AccessToken: "update logic",
+	}
+
+	common.ResponseOk(w, http.StatusCreated, response)
 }

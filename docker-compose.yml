@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  golang-boilerplate-be:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production-stage
+    image: golang-boilerplate-be:v1
+    container_name: golang-boilterplate-be
+    ports:
+      - 8001:8001
+    env_file:
+      - .env
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+    volumes:
+      - golang_boilerplate_be_data:/src/data/
+
+volumes:
+  golang_boilerplate_be_data:
+    driver: local

@@ -1,0 +1,69 @@
+definitions:
+  authmodel.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      token_type:
+        type: string
+    type: object
+  authmodel.User:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  common.RestResponse:
+    properties:
+      data: {}
+      msg:
+        type: string
+      status:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: User object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/authmodel.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.RestResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/authmodel.LoginResponse'
+              type: object
+      summary: Login API
+      tags:
+      - Auth
+  /api/healthz:
+    get:
+      description: Health check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.RestResponse'
+      summary: Health Check
+      tags:
+      - Health Check
+swagger: "2.0"
