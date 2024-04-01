@@ -20,6 +20,9 @@ import (
 	"strings"
 	"sync"
 
+	_ "boilerplate/docs"
+
+	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
 	"github.com/segmentio/kafka-go"
 )
@@ -74,7 +77,14 @@ func loadVars(c *config.Config) error {
 	return nil
 }
 
-// Run the https server
+// @title Swagger
+// @version 1.0
+// @description This is a list of API
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @BasePath /
 func (s *Server) Run() {
 	defer s.kafkaConn.Close()
 
@@ -93,6 +103,8 @@ func (s *Server) Run() {
 	// profiling go programs
 	// https://go.dev/blog/pprof
 	s.router.PathPrefix("/debug/pprof").Handler(http.DefaultServeMux)
+
+	// API route
 	apiRouter := s.router.PathPrefix("/api").Subrouter()
 
 	// Health check
@@ -102,6 +114,12 @@ func (s *Server) Run() {
 
 	authHandlers := authrest.NewAuthHandlers(apiRouter, s.log, s.Cfg, authSvc, s.metricsCollector)
 	authHandlers.RegisterRouter()
+
+	// Swagger: http://localhost:8001/docs
+	s.router.Handle("/swagger.yaml", http.FileServer(http.Dir("./docs")))
+	opts := middleware.SwaggerUIOpts{SpecURL: "swagger.yaml"}
+	sh := middleware.SwaggerUI(opts, nil)
+	s.router.Handle("/docs", sh)
 
 	runHTTP := func(wg *sync.WaitGroup) {
 		defer wg.Done()

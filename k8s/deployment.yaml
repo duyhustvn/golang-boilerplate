@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: dev
+  name: be-config
+data: # value must be string
+  SERVICE_NAME: boilerplate
+  SERVICE_ENV: dev
+  HTTPS_PORT: '8001'
+  LOG_LEVEL: INFO
+  LOG_PATH: logs/app.log
+  REDIS_ADDRS: 192.168.1.6:6379
+  REDIS_PASSWORD:
+  REDIS_CHANNEL:
+  REDIS_DB:
+  REDIS_POOL_SIZE: '20'
+  KAFKA_BROKERS: 192.168.1.6:9092
+  KAFKA_GROUP_ID: boilerplate
+  KAFKA_POOL_SIZE: '30'
+  KAFKA_SIGNUP_USER_TOPIC: register
+  STATSD_ADDR: 192.168.1.6:8125
+  STATSD_PREFIX: boilerplate_prefix
+  STATSD_FLUSH_PERIOD: '100'
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dev
+  name: be
+  labels:
+    app: be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be
+  template:
+    metadata:
+      labels:
+        app: be
+    spec:
+      containers:
+        - name: be
+          image:  docker.io/duyle95/golang-boilerplate-be:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8001
+          envFrom:
+            - configMapRef:
+                name: be-config
