@@ -115,6 +115,7 @@ func (s *Server) Run() {
 	authHandlers := authrest.NewAuthHandlers(apiRouter, s.log, s.Cfg, authSvc, s.metricsCollector)
 	authHandlers.RegisterRouter()
 
+	// Swagger: http://localhost:8001/docs
 	s.router.Handle("/swagger.yaml", http.FileServer(http.Dir("./docs")))
 	opts := middleware.SwaggerUIOpts{SpecURL: "swagger.yaml"}
 	sh := middleware.SwaggerUI(opts, nil)

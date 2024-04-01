@@ -1,6 +1,6 @@
 OBJECTS=server.out
 
-IMG=golang-boilerplate
+IMG=golang-boilerplate-be
 IMG_TAG=v1
 
 CONTAINER_REGISTRY = docker.io
@@ -24,6 +24,7 @@ docker-run:
 	cd deployments && docker compose up
 
 docker-push:
+	docker tag $(IMG):$(IMG_TAG) $(USER)/$(IMG):$(IMG_TAG)
 	docker push $(CONTAINER_REGISTRY)/$(USER)/$(IMG):$(IMG_TAG)
 
 clean:
