@@ -6,3 +6,5 @@ sample/**
 
 *.o
 *.out
+
+secret-env.yaml

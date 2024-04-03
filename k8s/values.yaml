@@ -1,0 +1,33 @@
+environment: dev
+
+serviceName: boilerplate
+servicePort: 8001
+logLevel: INFO
+logPath: logs/app.log
+
+redisAddrs: 192.168.109.241:6379
+redisPassword:
+redisChannel:
+redisPoolSize: 20
+
+kafkaBrokers: 192.168.109.241:9092
+kafkaGroupId: boilerplate
+kafkaPoolSize: 30
+kafkaSignupUserTopic: register
+
+postgresHost: 192.168.109.241
+postgresPort: 5432
+postgresUsername: duyle
+postgresPassword: changeme
+postgresDbName: golang_boilerplate
+
+statsdAddr: 192.168.109.241:8125
+statsdPrefix: boilerplate_prefix
+statsdFlushPeriod: 100
+
+container:
+  name: boilerplate-be
+  port: 8001
+  image: docker.io/duyle95/golang-boilerplate-be
+  tag: v1
+replicas: 1
