@@ -11,6 +11,7 @@ import (
 	healthchecksvc "boilerplate/internal/modules/healthcheck/service"
 	healthcheckrest "boilerplate/internal/modules/healthcheck/transport/rest"
 	kafkaclient "boilerplate/pkg/kafka"
+	postgres "boilerplate/pkg/postgresql"
 	redisclient "boilerplate/pkg/redis"
 	"context"
 	"fmt"
@@ -70,6 +71,11 @@ func loadVars(c *config.Config) error {
 	c.Logger.GetLoggerEnv()
 	c.Server.GetHTTPSEnv()
 	c.Kafka.GetKafkaEnv()
+
+	if err := c.Postgres.GetPostgresEnv(); err != nil {
+		return err
+	}
+
 	if _, err := c.Monitoring.GetMonitoringEnv(); err != nil {
 		return err
 	}
@@ -85,8 +91,14 @@ func loadVars(c *config.Config) error {
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @BasePath /
-func (s *Server) Run() {
+func (s *Server) Run() error {
 	defer s.kafkaConn.Close()
+
+	sqlxDB, err := postgres.NewSqlx(s.Cfg.Postgres, s.log)
+	if err != nil {
+		return err
+	}
+	defer sqlxDB.Close()
 
 	rdb := redisclient.NewUniversalRedisClient(s.Cfg.Redis)
 	authCacheRepo := authrepo.NewRedisRepo(rdb, s.log)
@@ -134,4 +146,6 @@ func (s *Server) Run() {
 	wg.Add(1)
 	go runHTTP(wg)
 	wg.Wait()
+
+	return nil
 }

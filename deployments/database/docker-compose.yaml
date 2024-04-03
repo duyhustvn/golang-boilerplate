@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  redis:
+    image: postgres:16-alpine
+    restart: always
+    container_name: postgres16
+    environment:
+      - POSTGRES_DB=golang_boilerplate
+      - POSTGRES_USER=duyle
+      - POSTGRES_PASSWORD=changeme
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    volumes:
+      - postgresql16_data:/var/lib/postgresql/data
+
+volumes:
+  postgresql16_data:
+    name: postgresql16_data
+    driver: local

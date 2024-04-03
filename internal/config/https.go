@@ -11,7 +11,7 @@ type HTTPS struct {
 func (h *HTTPS) GetHTTPSEnv() *HTTPS {
 	h.Cert = GetEnv("HTTPS_CERT")
 	h.Key = GetEnv("HTTPS_KEY")
-	h.Port = GetEnv("HTTPS_PORT")
+	h.Port = GetEnv("SERVICE_PORT")
 
 	return h
 }

@@ -2,9 +2,12 @@ package main
 
 import (
 	"boilerplate/internal/server"
+	"log"
 )
 
 func main() {
 	app := server.GetApp()
-	app.Run()
+	if err := app.Run(); err != nil {
+		log.Fatal(err)
+	}
 }

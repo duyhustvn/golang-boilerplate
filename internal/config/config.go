@@ -12,6 +12,7 @@ type Config struct {
 	Redis      Redis
 	Server     HTTPS
 	Kafka      Kafka
+	Postgres   Postgres
 	Monitoring MonitoringConfig
 }
 
