@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.container.name }}-svc
+  labels:
+    app: {{ .Values.container.name }}-{{ .Values.environment }}
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8001 # forward to this port of container
+  selector:
+    app: {{ .Values.container.name }} # match the pod labels not the deployment labels
