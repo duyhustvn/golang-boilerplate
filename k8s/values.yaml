@@ -30,4 +30,9 @@ container:
   port: 8001
   image: docker.io/duyle95/golang-boilerplate-be
   tag: v1
-replicas: 3
+replicas: 1
+
+
+# imageCredentials:
+registry: docker.io
+registryUsername: duyle95
