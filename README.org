@@ -25,10 +25,15 @@ Key F6F8FDAE01716CDC is a Key ID. In GPG, the Key ID is a unique identifier assi
 sops --encrypt -pgp {pgp KEY ID} secret-env.yaml > dev-secrets.yaml
 #+end_src
 Example:
-
+#+begin_src
 sops --encrypt -pgp F6F8FDAE01716CDC secret-env.yaml > dev-secrets.yaml
+#+end_src
 
 - Deploy with helm
 #+begin_src
 sops -d k8s/dev-secrets.yaml > temp-dev-secrets.yaml && helm upgrade --install boilerplate-be-dev --values temp-dev-secrets.yaml ./k8s && rm temp-dev-secrets.yaml
+#+end_src
+If you got an error "inappropriate ioctl for device", it is because gpg cannot read the passphrase from terminal. To fix it set the env *GPG_TTY*
+#+begin_src
+export GPG_TTY=$(tty)
 #+end_src
