@@ -3,10 +3,15 @@ kind: Ingress
 metadata:
   name: {{ .Values.container.name }}-ingress
 spec:
+  tls:
+    - hosts:
+      - changeme.vn
+      secretName: changeme-tls
   rules:
-    - http:
+    - host: changeme.vn
+      http:
         paths:
-          - path: /
+          - path: /api
             pathType: Prefix
             backend:
               service:
