@@ -32,6 +32,18 @@ spec:
             - name: private-keys
               mountPath: /src/certs
               readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /api/healthz
+              port: {{ .Values.container.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/healthz
+              port: {{ .Values.container.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
           env:
             - name: SERVICE_ENV
               value: {{ .Values.environment | quote }}
