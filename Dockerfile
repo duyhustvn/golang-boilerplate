@@ -21,6 +21,6 @@ RUN  go build -o main.o /src/cmd/service/main.go
 FROM alpine:3.18.2 AS production-stage
 WORKDIR /src
 RUN mkdir -p /src/logs
-COPY --from=builder /src/main.o /src
-COPY --from=builder /src/docs/ /src/docs/
-CMD ["/src/main.o"]
+COPY --from=builder /src/main.o ./golang-boilerplate-be
+COPY --from=builder /src/docs/ ./docs/
+CMD ["./golang-boilerplate-be"]

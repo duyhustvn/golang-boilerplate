@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       target: production-stage
     image: golang-boilerplate-be:v1
-    container_name: golang-boilterplate-be
+    container_name: golang-boilerplate-be
     ports:
       - 8001:8001
     env_file:

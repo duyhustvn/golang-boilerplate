@@ -25,24 +25,31 @@ type Logger interface {
 }
 
 // GetLogger return logger
-func GetLogger(env *config.Config) (log Logger, err error) {
-	cfg := zap.NewProductionConfig()
-	cfg.OutputPaths = []string{
-		env.Logger.Path,
-		"stdout",
+func GetLogger(cfg *config.Config) (log Logger, err error) {
+	if cfg.Env.Environment == "test" {
+		logger := zap.NewNop()
+		defer logger.Sync()
+		sugar := logger.Sugar()
+		return sugar, nil
+	} else {
+		zapCfg := zap.NewProductionConfig()
+		zapCfg.OutputPaths = []string{
+			cfg.Logger.Path,
+			"stdout",
+		}
+
+		zapCfg.EncoderConfig.EncodeTime = zapcore.RFC3339TimeEncoder
+		zapCfg.Level.SetLevel(getLevel(cfg.Logger.Level))
+
+		logger, err := zapCfg.Build()
+		if err != nil {
+			return nil, err
+		}
+
+		defer logger.Sync()
+		sugar := logger.Sugar()
+		return sugar, nil
 	}
-
-	cfg.EncoderConfig.EncodeTime = zapcore.RFC3339TimeEncoder
-	cfg.Level.SetLevel(getLevel(env.Logger.Level))
-
-	logger, err := cfg.Build()
-	if err != nil {
-		return nil, err
-	}
-
-	defer logger.Sync()
-	sugar := logger.Sugar()
-	return sugar, nil
 }
 
 func getLevel(logLevel string) zapcore.Level {
