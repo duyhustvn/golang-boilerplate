@@ -1,13 +1,13 @@
 version: "3"
 
 services:
-  redis:
+  postgresql:
     image: postgres:16-alpine
     restart: always
     container_name: postgres16
     environment:
       - POSTGRES_DB=golang_boilerplate
-      - POSTGRES_USER=duyle
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=changeme
     expose:
       - 5432
@@ -15,6 +15,16 @@ services:
       - 5432:5432
     volumes:
       - postgresql16_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    restart: always
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=changeme
+    ports:
+      - 4848:80
 
 volumes:
   postgresql16_data:
