@@ -4,6 +4,7 @@ import (
 	"boilerplate/internal/config"
 	"boilerplate/internal/logger"
 	"boilerplate/internal/metrics"
+	"boilerplate/internal/middleware"
 	authrepo "boilerplate/internal/modules/auth/repository"
 	authsvc "boilerplate/internal/modules/auth/service"
 	authkafka "boilerplate/internal/modules/auth/transport/kafka"
@@ -23,7 +24,7 @@ import (
 
 	_ "boilerplate/docs"
 
-	"github.com/go-openapi/runtime/middleware"
+	swaggerMiddleware "github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
 	"github.com/segmentio/kafka-go"
 )
@@ -129,9 +130,12 @@ func (s *Server) Run() error {
 
 	// Swagger: http://localhost:8001/docs
 	s.router.Handle("/swagger.yaml", http.FileServer(http.Dir("./docs")))
-	opts := middleware.SwaggerUIOpts{SpecURL: "swagger.yaml"}
-	sh := middleware.SwaggerUI(opts, nil)
+	opts := swaggerMiddleware.SwaggerUIOpts{SpecURL: "swagger.yaml"}
+	sh := swaggerMiddleware.SwaggerUI(opts, nil)
 	s.router.Handle("/docs", sh)
+
+	mw := middleware.NewMiddleware(s.log)
+	s.router.Use(mw.LoggingMiddleware)
 
 	runHTTP := func(wg *sync.WaitGroup) {
 		defer wg.Done()
