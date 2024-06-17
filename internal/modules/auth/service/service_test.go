@@ -3,22 +3,11 @@ package authsvc
 import (
 	"boilerplate/internal/config"
 	"boilerplate/internal/logger"
+	authrepo "boilerplate/internal/modules/auth/repository"
 	"context"
 	"errors"
 	"testing"
 )
-
-type cacheRepoMock struct {
-	FakeSaveNewUser func(ctx context.Context, username string, password string) error
-}
-
-func NewCacheRepoMock() *cacheRepoMock {
-	return &cacheRepoMock{}
-}
-
-func (m *cacheRepoMock) SaveNewUser(ctx context.Context, username string, password string) error {
-	return m.FakeSaveNewUser(ctx, username, password)
-}
 
 func TestRegister(t *testing.T) {
 	cfg := config.Config{
@@ -32,7 +21,7 @@ func TestRegister(t *testing.T) {
 	}
 
 	t.Run("should run success", func(t *testing.T) {
-		cacheRepo := cacheRepoMock{
+		cacheRepo := authrepo.CacheRepoMock{
 			FakeSaveNewUser: func(ctx context.Context, username string, password string) error {
 				return nil
 			},
@@ -46,7 +35,7 @@ func TestRegister(t *testing.T) {
 	})
 
 	t.Run("should return error", func(t *testing.T) {
-		cacheRepo := cacheRepoMock{
+		cacheRepo := authrepo.CacheRepoMock{
 			FakeSaveNewUser: func(ctx context.Context, username string, password string) error {
 				return errors.New("User already exists")
 			},

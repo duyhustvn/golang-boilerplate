@@ -6,7 +6,6 @@ import "strconv"
 type Redis struct {
 	Addrs    string
 	Password string
-	Port     string
 	Channel  string
 	DB       int
 	PoolSize int

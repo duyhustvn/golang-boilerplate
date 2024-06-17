@@ -7,7 +7,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-const prefixKey = "user"
+const PrefixKey = "user"
 
 type RedisRepo struct {
 	prefixKey string
@@ -16,7 +16,7 @@ type RedisRepo struct {
 }
 
 func NewRedisRepo(rdb redis.UniversalClient, log logger.Logger) *RedisRepo {
-	return &RedisRepo{prefixKey: prefixKey, client: rdb, log: log}
+	return &RedisRepo{prefixKey: PrefixKey, client: rdb, log: log}
 }
 
 func (rr *RedisRepo) SaveNewUser(ctx context.Context, username string, password string) error {
