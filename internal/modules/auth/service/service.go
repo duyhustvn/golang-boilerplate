@@ -8,11 +8,12 @@ import (
 
 type AuthSvc struct {
 	cacheRepo authrepo.AuthCacheRepo
+	sqlRepo   authrepo.AuthSqlRepo
 	log       logger.Logger
 }
 
-func NewAuthSvc(cacheRepo authrepo.AuthCacheRepo, log logger.Logger) *AuthSvc {
-	return &AuthSvc{cacheRepo: cacheRepo, log: log}
+func NewAuthSvc(cacheRepo authrepo.AuthCacheRepo, sqlRepo authrepo.AuthSqlRepo, log logger.Logger) *AuthSvc {
+	return &AuthSvc{cacheRepo: cacheRepo, sqlRepo: sqlRepo, log: log}
 }
 
 func (svc *AuthSvc) Register(ctx context.Context, username string, password string) error {

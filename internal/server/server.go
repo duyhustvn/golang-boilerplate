@@ -6,6 +6,7 @@ import (
 	"boilerplate/internal/metrics"
 	"boilerplate/internal/middleware"
 	authcacherepo "boilerplate/internal/modules/auth/repository/cache"
+	authsqlrepo "boilerplate/internal/modules/auth/repository/sql"
 	authsvc "boilerplate/internal/modules/auth/service"
 	authkafka "boilerplate/internal/modules/auth/transport/kafka"
 	authrest "boilerplate/internal/modules/auth/transport/rest"
@@ -19,6 +20,7 @@ import (
 	"log"
 	"net/http"
 	_ "net/http/pprof"
+	"net/url"
 	"strings"
 	"sync"
 
@@ -95,7 +97,9 @@ func loadVars(c *config.Config) error {
 func (s *Server) Run() error {
 	defer s.kafkaConn.Close()
 
-	sqlxDB, err := postgres.NewSqlx(s.Cfg.Postgres, s.log)
+	postgresCfg := s.Cfg.Postgres
+	dataSourceName := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", postgresCfg.Username, url.QueryEscape(postgresCfg.Password), postgresCfg.Host, postgresCfg.Port, postgresCfg.DBName)
+	sqlxDB, err := postgres.NewSqlx(dataSourceName, s.log)
 	if err != nil {
 		return err
 	}
@@ -103,8 +107,9 @@ func (s *Server) Run() error {
 
 	rdb := redisclient.NewUniversalRedisClient(s.Cfg.Redis)
 	authCacheRepo := authcacherepo.NewRedisRepo(rdb, s.log)
+	authSqlRepo := authsqlrepo.NewSqlRepo(sqlxDB, s.log)
 
-	authSvc := authsvc.NewAuthSvc(authCacheRepo, s.log)
+	authSvc := authsvc.NewAuthSvc(authCacheRepo, authSqlRepo, s.log)
 	s.metricsCollector = metrics.NewCollector(s.Cfg, s.log)
 
 	authReaderMessageProcess := authkafka.NewAuthMessageProcessor(s.log, s.Cfg, authSvc, s.metricsCollector)

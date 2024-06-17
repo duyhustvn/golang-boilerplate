@@ -27,7 +27,7 @@ func TestRegister(t *testing.T) {
 			},
 		}
 
-		authSvc := NewAuthSvc(&cacheRepo, log)
+		authSvc := NewAuthSvc(&cacheRepo, nil, log)
 
 		if err := authSvc.Register(context.Background(), "username", "password"); err != nil {
 			t.Errorf("should return no error but got = %+v", err)
@@ -41,7 +41,7 @@ func TestRegister(t *testing.T) {
 			},
 		}
 
-		authSvc := NewAuthSvc(&cacheRepo, log)
+		authSvc := NewAuthSvc(&cacheRepo, nil, log)
 
 		err := authSvc.Register(context.Background(), "username", "password")
 		if err == nil {
