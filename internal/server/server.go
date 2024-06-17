@@ -5,7 +5,7 @@ import (
 	"boilerplate/internal/logger"
 	"boilerplate/internal/metrics"
 	"boilerplate/internal/middleware"
-	authrepo "boilerplate/internal/modules/auth/repository"
+	authcacherepo "boilerplate/internal/modules/auth/repository/cache"
 	authsvc "boilerplate/internal/modules/auth/service"
 	authkafka "boilerplate/internal/modules/auth/transport/kafka"
 	authrest "boilerplate/internal/modules/auth/transport/rest"
@@ -102,7 +102,7 @@ func (s *Server) Run() error {
 	defer sqlxDB.Close()
 
 	rdb := redisclient.NewUniversalRedisClient(s.Cfg.Redis)
-	authCacheRepo := authrepo.NewRedisRepo(rdb, s.log)
+	authCacheRepo := authcacherepo.NewRedisRepo(rdb, s.log)
 
 	authSvc := authsvc.NewAuthSvc(authCacheRepo, s.log)
 	s.metricsCollector = metrics.NewCollector(s.Cfg, s.log)

@@ -1,4 +1,4 @@
-package authrepo
+package authcacherepo
 
 import (
 	"boilerplate/internal/logger"

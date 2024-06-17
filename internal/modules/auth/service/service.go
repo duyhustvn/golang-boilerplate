@@ -7,11 +7,11 @@ import (
 )
 
 type AuthSvc struct {
-	cacheRepo authrepo.ICacheRepository
+	cacheRepo authrepo.AuthCacheRepo
 	log       logger.Logger
 }
 
-func NewAuthSvc(cacheRepo authrepo.ICacheRepository, log logger.Logger) *AuthSvc {
+func NewAuthSvc(cacheRepo authrepo.AuthCacheRepo, log logger.Logger) *AuthSvc {
 	return &AuthSvc{cacheRepo: cacheRepo, log: log}
 }
 
