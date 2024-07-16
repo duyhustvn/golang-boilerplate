@@ -1,0 +1,15 @@
+Vagrant.configure("2") do |config|
+  (1..3).each do |i|
+    config.vm.define "vm#{i}" do |vm_config|
+      vm_config.vm.box = "ubuntu/jammy64" # Specify the box you want to use
+      vm_config.vm.synced_folder "./rke2-artifacts", "/root/rke2-artifacts", type: "rsync"
+      # Fixed IP addresses for private network
+      vm_config.vm.network "private_network", ip: "192.168.56.#{i}"
+      vm_config.vm.provider "virtualbox" do |vb|
+        vb.name = "ubuntu_node_#{i}"
+        vb.memory = "3096"
+        vb.cpus = 2
+      end
+    end
+  end
+end

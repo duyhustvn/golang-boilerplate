@@ -1,0 +1,11 @@
+#+title: Setup K8s cluster
+
+* Setup virtual machine cluster using Vagrant
+** Install vargant on Ubuntu
+#+begin_src shell
+sudo sh ./scripts/install_vagrant.sh
+#+end_src
+** Powerup 3 VMs using Vagrantfile configuration file inside scripts folder
+#+begin_src shell
+cd ./scripts && vagrant up
+#+end_src
