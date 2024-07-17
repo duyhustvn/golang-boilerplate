@@ -45,5 +45,11 @@ done
 echo "Install Rke2 to virtual machine"
 for ((i = 1; i <= $NUMBER_OF_VMS; i++)); do
     echo "Install Rke2 to virtual machine vm$i"
-    vagrant ssh vm$i -c "sudo INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts bash /root/rke2-artifacts/install.sh"
+    rke2_installed=$(vagrant ssh vm$i -c "command -v rke2")
+    if [ -z $rke2_installed ]; then
+        echo "Rke2 not installed install it"
+        vagrant ssh vm$i -c "sudo INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts bash /root/rke2-artifacts/install.sh"
+    else
+        echo "Rke2 already installed skip"
+    fi
 done
