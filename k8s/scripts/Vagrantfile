@@ -1,17 +1,35 @@
 Vagrant.configure("2") do |config|
-  (1..3).each do |i|
-    config.vm.define "vm#{i}" do |vm_config|
+  # Define VM configurations
+  vms = [
+    { gui_display_name: "k8s_master_1", name: "vm1", hostname: "master-1", ip: "192.168.56.101" },
+    { gui_display_name: "k8s_master_2", name: "vm2", hostname: "master-2", ip: "192.168.56.102" },
+    { gui_display_name: "k8s_master_3", name: "vm3", hostname: "master-3", ip: "192.168.56.103" }
+  ]
+
+  vms.each do |vm|
+
+    config.vm.define vm[:name] do |vm_config|
       vm_config.vm.box = "ubuntu/jammy64" # Specify the box you want to use
       vm_config.vm.synced_folder "./rke2-artifacts", "/root/rke2-artifacts", type: "rsync"
-      vm_config.vm.hostname = "master-node-#{i}"
+      # host name
+      vm_config.vm.hostname = vm[:hostname]
       # Fixed IP addresses for private network
-      vm_config.vm.network "private_network", ip: "192.168.56.#{i}"
+      vm_config.vm.network "private_network", ip: vm[:ip]
 
       vm_config.vm.provider "virtualbox" do |vb|
-        vb.name = "ubuntu_node_#{i}"
+        vb.name = vm[:gui_display_name]
         vb.memory = "3096"
         vb.cpus = 2
       end
+
+      # Build the hosts string
+      hosts_entries = vms.map { |other_vm| "#{other_vm[:ip]} #{other_vm[:name]}" unless other_vm[:name] == vm[:name] }.compact.join("\n")
+
+      # Provision the VM with the hosts entries
+      vm_config.vm.provision "shell", inline: <<-SHELL
+        echo "#{hosts_entries}" >> /etc/hosts
+      SHELL
+
     end
   end
 end

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Include the file that defines the array
+source ./vm_array.sh
+
 RKE2_VERSION=v1.29.4+rke2r1
 RKE2_DOWNLOAD_DIRECTORY=./rke2-artifacts
 NUMBER_OF_VMS=3
@@ -36,19 +39,18 @@ else
     echo "Rke2 install script downloaded"
 fi
 
-echo "Copy Rke2 to virtual machine"
-for ((i = 1; i <= $NUMBER_OF_VMS; i++)); do
-    echo "Copy Rke2 to virtual machine vm$i"
-    vagrant rsync "vm$i"
-done
+# Loop through the array and add entries to the /etc/hosts file
+for vm in "${vms[@]}"; do
+    ip=$(echo $vm | awk '{print $1}')
+    vmname=$(echo $vm | awk '{print $2}')
+    echo "Copy Rke2 to virtual machine $vmname"
+    vagrant rsync $vmname
 
-echo "Install Rke2 to virtual machine"
-for ((i = 1; i <= $NUMBER_OF_VMS; i++)); do
-    echo "Install Rke2 to virtual machine vm$i"
-    rke2_installed=$(vagrant ssh vm$i -c "command -v rke2")
+    echo "Install Rke2 to virtual machine $vmname"
+    rke2_installed=$(vagrant ssh $vmname -c "command -v rke2")
     if [ -z $rke2_installed ]; then
         echo "Rke2 not installed install it"
-        vagrant ssh vm$i -c "sudo INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts bash /root/rke2-artifacts/install.sh"
+        vagrant ssh $vmname -c "sudo INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts bash /root/rke2-artifacts/install.sh"
     else
         echo "Rke2 already installed skip"
     fi
