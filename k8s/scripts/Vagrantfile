@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Build the hosts string
-      hosts_entries = vms.map { |other_vm| "#{other_vm[:ip]} #{other_vm[:name]}" unless other_vm[:name] == vm[:name] }.compact.join("\n")
+      hosts_entries = vms.map { |other_vm| "#{other_vm[:ip]} #{other_vm[:hostname]}" unless other_vm[:hostname] == vm[:hostname] }.compact.join("\n")
 
       # Provision the VM with the hosts entries
       vm_config.vm.provision "shell", inline: <<-SHELL
