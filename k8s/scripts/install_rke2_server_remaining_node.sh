@@ -19,6 +19,7 @@ echo "token: $token"
 for (( i=1; i<${#vms[@]}; i++ )); do
     vm=${vms[$i]}
     echo "vm: $vm"
+    ip=$(echo $vm | awk '{print $1}')
     vmname=$(echo $vm | awk '{print $2}')
     hostname=$(echo $vm | awk '{print $3}')
 
@@ -26,6 +27,7 @@ for (( i=1; i<${#vms[@]}; i++ )); do
     vagrant ssh $vmname -c "
 cat <<EOF > ~/config.yaml
 node-name: $hostname
+node-ip: $ip
 server: https://$hostname1:9345
 token: $token
 debug: true

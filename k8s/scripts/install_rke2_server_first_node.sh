@@ -14,6 +14,7 @@ vagrant ssh $vmname -c 'sudo mkdir -p /etc/rancher/rke2'
 vagrant ssh $vmname -c "
 cat <<EOF > ~/config.yaml
 node-name: $hostname
+node-ip: $ip
 token:
 debug: true
 # disable: rke2-ingress-nginx
