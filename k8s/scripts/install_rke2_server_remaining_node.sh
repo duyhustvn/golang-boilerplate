@@ -14,7 +14,6 @@ token=$(vagrant ssh $vmname1 -c "sudo cat $token_path")
 
 echo "token: $token"
 
-
 # Loop through the array using indices
 for (( i=1; i<${#vms[@]}; i++ )); do
     vm=${vms[$i]}
@@ -58,4 +57,6 @@ EOF
       echo "kubectl already installed. skip"
     fi
 
+    echo "Make symbol link for kube config to /root/.kube/config"
+    vagrant ssh $vmname -c "sudo mkdir -p /root/.kube && sudo ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config"
 done

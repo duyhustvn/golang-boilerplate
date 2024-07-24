@@ -44,3 +44,6 @@ if [ -z $kubectl_exists ]; then
 else
   echo "kubectl already installed. skip"
 fi
+
+echo "Make symbol link for kube config to /root/.kube/config"
+vagrant ssh $vmname -c "sudo mkdir -p /root/.kube && sudo ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config"
