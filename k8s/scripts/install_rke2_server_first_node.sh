@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Include the file that defines the array
-source ./vm_array.sh
+source ./global_env.sh
 
 vm=${vms[0]}
 echo "vm: $vm"

@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
 # Include the file that defines the array
-source ./vm_array.sh
+source ./global_env.sh
 
 RKE2_VERSION=v1.29.4+rke2r1
-RKE2_DOWNLOAD_DIRECTORY=./rke2-artifacts
-NUMBER_OF_VMS=3
 HELM_VERSION=v3.14.3
 
 echo "Check if Rke2 was downloaed"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Include the file that defines the array
-source ./vm_array.sh
+source ./global_env.sh
 
 token_path="/var/lib/rancher/rke2/server/token"
 
