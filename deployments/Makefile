@@ -12,7 +12,7 @@ kafka-zookeeper-down:
 	cd kafka && docker compose down
 
 kafka-kraft-up-bg:
-	cd kafka && docker compose rm -f kafka-zookeeper && docker compose build kafka-kraft && docker compose up kafka-kraft -d
+	cd kafka && docker compose build kafka-kraft && docker compose up kafka-kraft -d
 
 
 
