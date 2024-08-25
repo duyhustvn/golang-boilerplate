@@ -1,0 +1,56 @@
+image:
+  repository: bitnami/kafka
+  tag: 3.7
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+commonLabels:
+  service: kafka
+  release: kafka
+auth:
+  clientProtocol: sasl
+  externalClientProtocol: sasl
+  sasl:
+    mechanisms: plain
+    jaas:
+      clientUsers:
+        - user
+      existingSecret: kafka-credentials
+allowPlaintextListener: false
+replicaCount: 3
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 10m
+    memory: 5Mi
+#externalAccess:
+#  enabled: true
+#  service:
+#    type: ClusterIP
+#    domain: $PRIVATE_IP
+#    ports:
+#      external: 9905
+serviceAccount:
+  create: true
+rbac:
+  create: true
+readinessProbe:
+  enabled: true
+livenessProbe:
+  enabled: true
+persistence:
+  enabled: true
+  size: 10Gi
+  annotations:
+    helm.sh/resource-policy: keep
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/component
+              operator: In
+              values:
+                - kafka
+        topologyKey: kubernetes.io/hostname
