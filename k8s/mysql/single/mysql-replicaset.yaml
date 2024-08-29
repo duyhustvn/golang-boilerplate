@@ -40,4 +40,4 @@ spec:
       volumes:
       - name: database
         persistentVolumeClaim:
-          claimName: database
+          claimName: local-path-pvc
