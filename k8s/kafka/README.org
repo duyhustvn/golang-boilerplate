@@ -1,0 +1,6 @@
+#+title: README
+
+* Deploy using helm
+#+begin_src shell
+helm upgrade --install kafka -f values.yaml bitnami/kafka
+#+end_src
