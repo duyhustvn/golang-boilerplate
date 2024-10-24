@@ -1,0 +1,232 @@
+# Copyright Broadcom, Inc. All Rights Reserved.
+# SPDX-License-Identifier: APACHE-2.0
+
+## @section Global parameters
+## Global Docker image parameters
+## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+
+## @param global.defaultStorageClass Global default StorageClass for Persistent Volume(s)
+global:
+  defaultStorageClass: "local-path"
+
+## @section PostgreSQL with Repmgr parameters
+
+## PostgreSQL parameters
+##
+postgresql:
+  ## ref: https://hub.docker.com/r/bitnami/postgresql/tags/
+  ## @param postgresql.image.registry [default: REGISTRY_NAME] PostgreSQL with Repmgr image registry
+  ## @param postgresql.image.repository [default: REPOSITORY_NAME/postgresql-repmgr] PostgreSQL with Repmgr image repository
+  ## @skip postgresql.image.tag PostgreSQL with Repmgr image tag
+  ## @param postgresql.image.digest PostgreSQL image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  ## @param postgresql.image.pullPolicy PostgreSQL with Repmgr image pull policy
+  ## @param postgresql.image.pullSecrets Specify docker-registry secret names as an array
+  ## @param postgresql.image.debug Specify if debug logs should be enabled
+  ##
+  image:
+    registry: docker.io
+    repository: bitnami/postgresql-repmgr
+    tag: 16.4.0-debian-12-r14
+    ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: Always
+    ## Set to true if you would like to see extra information on logs
+    ##
+    debug: true
+  replicaCount: 3
+  #containerPorts:
+  #  postgresql: 5432
+
+  livenessProbe:
+    enabled: true
+  readinessProbe:
+    enabled: true
+
+  username: postgres
+  password: "changeme"
+  database: "postgres"
+
+  repmgrUsername: repmgr
+  repmgrPassword: "changeme"
+  repmgrDatabase: repmgr
+  repmgrLogLevel: DEBUG
+  repmgrConnectTimeout: 5
+  repmgrReconnectAttempts: 2
+  repmgrReconnectInterval: 3
+  repmgrFenceOldPrimary: false
+  repmgrChildNodesCheckInterval: 5
+  repmgrChildNodesConnectedMinCount: 1
+  repmgrChildNodesDisconnectTimeout: 30
+  ##
+  ## Audit settings
+  ## https://github.com/bitnami/containers/tree/main/bitnami/postgresql#auditing
+  ##
+  audit:
+    logHostname: true
+    logConnections: true
+    logDisconnections: true
+    clientMinMessages: debug
+  ## @param postgresql.sharedPreloadLibraries Shared preload libraries (comma-separated list)
+  ##
+  # sharedPreloadLibraries: "pgaudit, repmgr"
+
+## @section Pgpool parameters
+
+## Pgpool parameters
+##
+pgpool:
+  image:
+    registry: docker.io
+    repository: bitnami/pgpool
+    tag: 4.5.4-debian-12-r0
+    pullPolicy: Always
+    debug: true
+  automountServiceAccountToken: false
+  replicaCount: 3
+
+  livenessProbe:
+    enabled: true
+  readinessProbe:
+    enabled: true
+  ## @param pgpool.containerPorts.postgresql Pgpool port
+  ##
+  #containerPorts:
+  #  postgresql: 5432
+  adminUsername: admin
+  adminPassword: "changeme"
+  database: postgres
+  authenticationMethod: scram-sha-256
+  logConnections: true
+  logHostname: true
+  logPerNodeStatement: true
+  logLinePrefix: ""
+  clientMinMessages: debug
+  numInitChildren: 200
+  maxPool: 1
+  configuration: |-
+    log_per_node_statement = 'on'
+    log_disconnections = 'on'
+    log_hostname = 'on'
+    log_statement = 'on'
+    log_client_message = 'on'
+    log_min_message = debug
+
+## Enable persistence using Persistent Volume Claims
+## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+##
+persistence:
+  ## @param persistence.enabled Enable data persistence
+  ##
+  enabled: true
+  ## @param persistence.storageClass Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ## set, choosing the default provisioner.
+  ##
+  storageClass: "local-path"
+  ## @param persistence.mountPath The path the volume will be mounted at, useful when using different PostgreSQL images.
+  ##
+  mountPath: /bitnami/postgresql
+  ## @param persistence.accessModes List of access modes of data volume
+  ##
+  accessModes:
+    - ReadWriteOnce
+  ## @param persistence.size Persistent Volume Claim size
+  ##
+  size: 8Gi
+  ## @param persistence.annotations Persistent Volume Claim annotations
+  ##
+  annotations: {}
+  ## @param persistence.labels Persistent Volume Claim labels
+  ##
+  labels: {}
+  ## @param persistence.selector Selector to match an existing Persistent Volume (this value is evaluated as a template)
+  ## selector:
+  ##   matchLabels:
+  ##     app: my-app
+  ##
+  selector: {}
+## Persistent Volume Claim Retention Policy
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+##
+persistentVolumeClaimRetentionPolicy:
+  ## @param persistentVolumeClaimRetentionPolicy.enabled Enable Persistent volume retention policy for postgresql Statefulset
+  ##
+  enabled: false
+  ## @param persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+  ##
+  whenScaled: Retain
+  ## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+  ##
+  whenDeleted: Retain
+## @section Traffic Exposure parameters
+
+## PostgreSQL service parameters
+##
+service:
+  ## @param service.type Kubernetes service type (`ClusterIP`, `NodePort` or `LoadBalancer`)
+  ##
+  type: ClusterIP
+  ## @param service.ports.postgresql PostgreSQL port
+  ##
+  ports:
+    postgresql: 5432
+  ## @param service.portName PostgreSQL service port name
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#multi-port-services
+  ##
+  portName: postgresql
+  ## @param service.nodePorts.postgresql Kubernetes service nodePort
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+  ##
+  nodePorts:
+    postgresql: ""
+  ## @param service.loadBalancerIP Load balancer IP if service type is `LoadBalancer`
+  ## Set the LoadBalancer service type to internal only
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+  ##
+  loadBalancerIP: ""
+  ## @param service.loadBalancerSourceRanges Addresses that are allowed when service is LoadBalancer
+  ## https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
+  ##
+  ## loadBalancerSourceRanges:
+  ## - 10.10.10.0/24
+  ##
+  loadBalancerSourceRanges: []
+  ## @param service.clusterIP Set the Cluster IP to use
+  ## Static clusterIP or None for headless services
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#choosing-your-own-ip-address
+  ## e.g:
+  ## clusterIP: None
+  ##
+  clusterIP: ""
+  ## @param service.externalTrafficPolicy Enable client source IP preservation
+  ## ref https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+  ##
+  externalTrafficPolicy: Cluster
+  ## @param service.extraPorts Extra ports to expose (normally used with the `sidecar` value)
+  ##
+  extraPorts: []
+  ## @param service.sessionAffinity Control where client requests go, to the same pod or round-robin
+  ## Values: ClientIP or None
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/
+  ##
+  sessionAffinity: "None"
+  ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity
+  ## sessionAffinityConfig:
+  ##   clientIP:
+  ##     timeoutSeconds: 300
+  sessionAffinityConfig: {}
+  ## @param service.annotations Provide any additional annotations both for PostgreSQL and Pgpool services
+  ##
+  annotations: {}
+  ## @param service.serviceLabels Labels for PostgreSQL service
+  ##
+  serviceLabels: {}
+  ## Headless service properties
+  ##
+  headless:
+    ## @param service.headless.annotations Annotations for the headless service.
+    ##
+    annotations: {}

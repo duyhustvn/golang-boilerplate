@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-cluster-ip
+  labels:
+    service: postgresql-cluster-ip
+    service-manage-key: postgresql-stateless
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: web
+      port: 5432
+  selector:
+    app.kubernetes.io/component: pgpool
+    app.kubernetes.io/instance: postgresql
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-private
+  labels:
+    service: postgresql-private
+    service-manage-key: postgresql-stateless
+spec:
+  type: LoadBalancer
+  ports:
+    - name: web
+      protocol: TCP
+      port: 9909
+      targetPort: 5432
+  selector:
+    app.kubernetes.io/component: pgpool
+    app.kubernetes.io/instance: postgresql

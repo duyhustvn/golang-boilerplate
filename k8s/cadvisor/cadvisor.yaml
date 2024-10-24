@@ -87,9 +87,11 @@ metadata:
   labels:
     name: cadvisor
 spec:
+  type: NodePort
   ports:
   - port: 8080
     protocol: TCP
     targetPort: 8080 # forward to this port of container
+    nodePort: 30000
   selector:
     name: cadvisor # match the pod labels not the daemonset labels
