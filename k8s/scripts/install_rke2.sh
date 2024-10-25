@@ -8,8 +8,8 @@ HELM_VERSION=v3.14.3
 
 echo "Check if Rke2 was downloaed"
 if [ ! -f "$RKE2_DOWNLOAD_DIRECTORY/rke2-images.linux-amd64.tar.zst" ]; then
-    echo "Rke2 was not downloaded. Start downloading"
-    wget -O $RKE2_DOWNLOAD_DIRECTORY/rke2-images.linux-amd64.tar.zst https://github.com/rancher/rke2/releases/download/$RKE2_VERSION/rke2-images.linux-amd64.tar.zst
+    echo "Rke2 was not downloaded. Start downloading https://github.com/rancher/rke2/releases/download/$RKE2_VERSION/rke2-images.linux-amd64.tar.zst"
+    curl -o $RKE2_DOWNLOAD_DIRECTORY/rke2-images.linux-amd64.tar.zst -L https://github.com/rancher/rke2/releases/download/$RKE2_VERSION/rke2-images.linux-amd64.tar.zst
 else
     echo "Rke2 already downloaded. Skip"
 fi
@@ -17,7 +17,7 @@ fi
 echo "Check if Rke2 binary was downloaed"
 if [ ! -f "$RKE2_DOWNLOAD_DIRECTORY/rke2.linux-amd64.tar.gz" ]; then
     echo "Rke2 binary was not downloaded. Start downloading"
-    wget -O $RKE2_DOWNLOAD_DIRECTORY/rke2.linux-amd64.tar.gz https://github.com/rancher/rke2/releases/download/$RKE2_VERSION/rke2.linux-amd64.tar.gz
+    curl -o $RKE2_DOWNLOAD_DIRECTORY/rke2.linux-amd64.tar.gz -L https://github.com/rancher/rke2/releases/download/$RKE2_VERSION/rke2.linux-amd64.tar.gz
 else
     echo "Rke2 binary already downloaded. Skip"
 fi
@@ -25,7 +25,7 @@ fi
 echo "Check if Rke2 checksum was downloaed"
 if [ ! -f "$RKE2_DOWNLOAD_DIRECTORY/sha256sum-amd64.txt" ]; then
     echo "Rke2 checksum was not downloaded. Start downloading"
-    wget -O $RKE2_DOWNLOAD_DIRECTORY/sha256sum-amd64.txt https://github.com/rancher/rke2/releases/download/$RKE2_VERSION/sha256sum-amd64.txt
+    curl -o $RKE2_DOWNLOAD_DIRECTORY/sha256sum-amd64.txt -L https://github.com/rancher/rke2/releases/download/$RKE2_VERSION/sha256sum-amd64.txt
 else
     echo "Rke2 checksum already downloaded. Skip"
 fi
@@ -33,7 +33,7 @@ fi
 echo "Check if Rke2 install script was downloaed"
 if [ ! -f "$RKE2_DOWNLOAD_DIRECTORY/install.sh" ]; then
     echo "Rke2 install script was not downloaded. Start downloading"
-    wget -O $RKE2_DOWNLOAD_DIRECTORY/install.sh https://get.rke2.io
+    curl -o $RKE2_DOWNLOAD_DIRECTORY/install.sh -L https://get.rke2.io
 else
     echo "Rke2 install script downloaded. Skip"
 fi
@@ -41,7 +41,7 @@ fi
 echo "Check if helm was downloaed"
 if [ ! -f "$RKE2_DOWNLOAD_DIRECTORY/helm" ]; then
     echo "Helm was not downloaded. Start downloading"
-    wget -O - https://get.helm.sh/helm-$HELM_VERSION-linux-amd64.tar.gz | tar -xz -C $RKE2_DOWNLOAD_DIRECTORY
+    curl -o - https://get.helm.sh/helm-$HELM_VERSION-linux-amd64.tar.gz | tar -xz -C $RKE2_DOWNLOAD_DIRECTORY
     mv $RKE2_DOWNLOAD_DIRECTORY/linux-amd64/helm $RKE2_DOWNLOAD_DIRECTORY/helm
     rm -r $RKE2_DOWNLOAD_DIRECTORY/linux-amd64
 else
