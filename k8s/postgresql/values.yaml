@@ -7,7 +7,7 @@
 
 ## @param global.defaultStorageClass Global default StorageClass for Persistent Volume(s)
 global:
-  defaultStorageClass: "local-path"
+  # defaultStorageClass: "local-path"
 
 ## @section PostgreSQL with Repmgr parameters
 
@@ -125,7 +125,7 @@ persistence:
   ## If undefined (the default) or set to null, no storageClassName spec is
   ## set, choosing the default provisioner.
   ##
-  storageClass: "local-path"
+  # storageClass: "local-path"
   ## @param persistence.mountPath The path the volume will be mounted at, useful when using different PostgreSQL images.
   ##
   mountPath: /bitnami/postgresql
