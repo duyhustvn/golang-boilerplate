@@ -1,78 +1,3 @@
-# Copyright Broadcom, Inc. All Rights Reserved.
-# SPDX-License-Identifier: APACHE-2.0
-
-## @section Global parameters
-## Global Docker image parameters
-## Please, note that this will override the image parameters, including dependencies, configured to use the global value
-## Current available global Docker image parameters: imageRegistry, imagePullSecrets and storageClass
-##
-
-## @param global.imageRegistry Global Docker image registry
-## @param global.imagePullSecrets Global Docker registry secret names as an array
-## @param global.defaultStorageClass Global default StorageClass for Persistent Volume(s)
-## @param global.storageClass DEPRECATED: use global.defaultStorageClass instead
-##
-global:
-  imageRegistry: ""
-  ## E.g.
-  ## imagePullSecrets:
-  ##   - myRegistryKeySecretName
-  ##
-  imagePullSecrets: []
-  defaultStorageClass: "local-path"
-  storageClass: ""
-  ## Compatibility adaptations for Kubernetes platforms
-  ##
-  compatibility:
-    ## Compatibility adaptations for Openshift
-    ##
-    openshift:
-      ## @param global.compatibility.openshift.adaptSecurityContext Adapt the securityContext sections of the deployment to make them compatible with Openshift restricted-v2 SCC: remove runAsUser, runAsGroup and fsGroup and let the platform use their allowed default IDs. Possible values: auto (apply if the detected running cluster is Openshift), force (perform the adaptation always), disabled (do not perform adaptation)
-      ##
-      adaptSecurityContext: auto
-## @section Common parameters
-##
-
-## @param kubeVersion Override Kubernetes version
-##
-kubeVersion: ""
-## @param nameOverride String to partially override common.names.fullname
-##
-nameOverride: ""
-## @param fullnameOverride String to fully override common.names.fullname
-##
-fullnameOverride: ""
-## @param clusterDomain Default Kubernetes cluster domain
-##
-clusterDomain: cluster.local
-## @param commonLabels Labels to add to all deployed objects
-##
-commonLabels: {}
-## @param commonAnnotations Annotations to add to all deployed objects
-##
-commonAnnotations: {}
-## @param extraDeploy Array of extra objects to deploy with the release
-##
-extraDeploy: []
-## @param serviceBindings.enabled Create secret for service binding (Experimental)
-## Ref: https://servicebinding.io/service-provider/
-##
-serviceBindings:
-  enabled: false
-## Enable diagnostic mode in the statefulset
-##
-diagnosticMode:
-  ## @param diagnosticMode.enabled Enable diagnostic mode (all probes will be disabled and the command will be overridden)
-  ##
-  enabled: false
-  ## @param diagnosticMode.command Command to override all containers in the statefulset
-  ##
-  command:
-    - sleep
-  ## @param diagnosticMode.args Args to override all containers in the statefulset
-  ##
-  args:
-    - infinity
 ## @section Kafka parameters
 ##
 
@@ -106,7 +31,7 @@ image:
   pullSecrets: []
   ## Set to true if you would like to see extra information on logs
   ##
-  debug: false
+  debug: true
 ## @param extraInit Additional content for the kafka init script, rendered as a template.
 ##
 extraInit: ""
@@ -267,7 +192,7 @@ sasl:
   client:
     users:
       - user1
-    passwords: ""
+    passwords: "changeme"
   ## Credentials for Zookeeper communications.
   ## @param sasl.zookeeper.user Username for zookeeper communications when SASL is enabled.
   ## @param sasl.zookeeper.password Password for zookeeper communications when SASL is enabled.

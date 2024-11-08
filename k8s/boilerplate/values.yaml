@@ -10,8 +10,9 @@ redisPassword:
 redisChannel:
 redisPoolSize: 20
 
-kafkaBrokers: 192.168.101.14:9092
+kafkaBrokers: kafka:9092
 kafkaGroupId: boilerplate
+kafkaClientUser: user1
 kafkaPoolSize: 30
 kafkaSignupUserTopic: register
 

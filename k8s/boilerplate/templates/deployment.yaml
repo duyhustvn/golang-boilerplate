@@ -68,6 +68,10 @@ spec:
 
             - name: KAFKA_BROKERS
               value: {{ .Values.kafkaBrokers | quote }}
+            - name: KAFKA_CLIENT_USER
+              value: {{ .Values.kafkaClientUser | quote }}
+            - name: KAFKA_CLIENT_PASSWORD
+              value: {{ .Values.kafkaClientPassword | quote }}
             - name: KAFKA_GROUP_ID
               value: {{ .Values.kafkaGroupId | quote }}
             - name: KAFKA_POOL_SIZE

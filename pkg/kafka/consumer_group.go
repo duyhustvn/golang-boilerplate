@@ -4,9 +4,11 @@ import (
 	"context"
 	"sync"
 
+	"boilerplate/internal/config"
 	"boilerplate/internal/logger"
 
 	"github.com/segmentio/kafka-go"
+	"github.com/segmentio/kafka-go/sasl/plain"
 )
 
 // MessageProcessor processor methods must implement kafka.Worker func method interface
@@ -24,19 +26,32 @@ type ConsumerGroup interface {
 }
 
 type consumerGroup struct {
-	Brokers []string
-	GroupID string
-	log     logger.Logger
+	brokers       []string
+	groupID       string
+	authMechanism string
+	log           logger.Logger
+	cfg           config.Config
 }
 
 // NewConsumerGroup kafka consumer group constructor
-func NewConsumerGroup(brokers []string, groupID string, log logger.Logger) *consumerGroup {
-	return &consumerGroup{Brokers: brokers, GroupID: groupID, log: log}
+func NewConsumerGroup(brokers []string, authMechanism string, groupID string, log logger.Logger, cfg config.Config) *consumerGroup {
+	return &consumerGroup{brokers: brokers, groupID: groupID, authMechanism: authMechanism, log: log, cfg: cfg}
 }
 
 // GetNewKafkaReader create new kafka reader
 func (c *consumerGroup) GetNewKafkaReader(kafkaURL []string, groupTopics []string, groupID string) *kafka.Reader {
 	c.log.Infof("Listen to topic: %+v", groupTopics)
+	dialer := kafka.Dialer{
+		Timeout: dialTimeout,
+	}
+
+	if c.authMechanism == "SASL_PLAIN" {
+		dialer.SASLMechanism = plain.Mechanism{
+			Username: c.cfg.Kafka.ClientUser,
+			Password: c.cfg.Kafka.ClientPassword,
+		}
+	}
+
 	return kafka.NewReader(kafka.ReaderConfig{
 		Brokers:                kafkaURL,
 		GroupID:                groupID,
@@ -49,16 +64,14 @@ func (c *consumerGroup) GetNewKafkaReader(kafkaURL []string, groupTopics []strin
 		PartitionWatchInterval: partitionWatchInterval,
 		MaxAttempts:            maxAttempts,
 		MaxWait:                maxWait,
-		Dialer: &kafka.Dialer{
-			Timeout: dialTimeout,
-		},
+		Dialer:                 &dialer,
 	})
 }
 
 // GetNewKafkaWriter create new kafka producer
 func (c *consumerGroup) GetNewKafkaWriter() *kafka.Writer {
 	w := &kafka.Writer{
-		Addr:         kafka.TCP(c.Brokers...),
+		Addr:         kafka.TCP(c.brokers...),
 		Balancer:     &kafka.LeastBytes{},
 		RequiredAcks: writerRequiredAcks,
 		MaxAttempts:  writerMaxAttempts,
@@ -72,7 +85,7 @@ func (c *consumerGroup) GetNewKafkaWriter() *kafka.Writer {
 
 // ConsumeTopic start consumer group with given worker and pool size
 func (c *consumerGroup) ConsumeTopic(ctx context.Context, groupTopics []string, poolSize int, worker Worker) {
-	r := c.GetNewKafkaReader(c.Brokers, groupTopics, c.GroupID)
+	r := c.GetNewKafkaReader(c.brokers, groupTopics, c.groupID)
 
 	defer func() {
 		if err := r.Close(); err != nil {
@@ -80,7 +93,7 @@ func (c *consumerGroup) ConsumeTopic(ctx context.Context, groupTopics []string, 
 		}
 	}()
 
-	c.log.Infof("Starting consumer groupID: %s, topic: %+v, pool size: %v", c.GroupID, groupTopics, poolSize)
+	c.log.Infof("Starting consumer groupID: %s, topic: %+v, pool size: %v", c.groupID, groupTopics, poolSize)
 
 	wg := &sync.WaitGroup{}
 	for i := 0; i <= poolSize; i++ {
