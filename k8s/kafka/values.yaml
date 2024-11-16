@@ -14,130 +14,36 @@
 image:
   registry: docker.io
   repository: bitnami/kafka
-  tag: 3.8.0-debian-12-r3
-  digest: ""
-  ## Specify a imagePullPolicy
-  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
-  ##
-  pullPolicy: IfNotPresent
-  ## Optionally specify an array of imagePullSecrets.
-  ## Secrets must be manually created in the namespace.
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-  ## e.g:
-  ## pullSecrets:
-  ##   - myRegistryKeySecretName
-  ##
-  pullSecrets: []
-  ## Set to true if you would like to see extra information on logs
-  ##
+  tag: 3.7.0-debian-12-r6
   debug: true
-## @param extraInit Additional content for the kafka init script, rendered as a template.
-##
-extraInit: ""
-## @param config Configuration file for Kafka, rendered as a template. Auto-generated based on chart values when not specified.
-## @param existingConfigmap ConfigMap with Kafka Configuration
-## NOTE: This will override the configuration based on values, please act carefully
-## If both are set, the existingConfigMap will be used.
-##
-config: ""
-existingConfigmap: ""
-## @param extraConfig Additional configuration to be appended at the end of the generated Kafka configuration file.
-##
-extraConfig: ""
-## @param extraConfigYaml Additional configuration in yaml format to be appended at the end of the generated Kafka configuration file.
-##
-## E.g.
-## extraConfigYaml:
-##   default.replication.factor: 3
-##
-extraConfigYaml: {}
-## @param secretConfig Additional configuration to be appended at the end of the generated Kafka configuration file.
-## This value will be stored in a secret.
-##
-secretConfig: ""
-## @param existingSecretConfig Secret with additonal configuration that will be appended to the end of the generated Kafka configuration file
-## The key for the configuration should be: server-secret.properties
-## NOTE: This will override secretConfig value
-##
-existingSecretConfig: ""
-## @param log4j An optional log4j.properties file to overwrite the default of the Kafka brokers
-## An optional log4j.properties file to overwrite the default of the Kafka brokers
-## ref: https://github.com/apache/kafka/blob/trunk/config/log4j.properties
-##
-log4j: ""
-## @param existingLog4jConfigMap The name of an existing ConfigMap containing a log4j.properties file
-## The name of an existing ConfigMap containing a log4j.properties file
-## NOTE: this will override `log4j`
-##
-existingLog4jConfigMap: ""
+
 ## @param heapOpts Kafka Java Heap size
 ##
 heapOpts: -Xmx1024m -Xms1024m
-## @param brokerRackAssignment Set Broker Assignment for multi tenant environment Allowed values: `aws-az`
-## ref: https://cwiki.apache.org/confluence/display/KAFKA/KIP-392%3A+Allow+consumers+to+fetch+from+closest+replica
-##
-brokerRackAssignment: ""
-## @param interBrokerProtocolVersion Override the setting 'inter.broker.protocol.version' during the ZK migration.
-## Ref. https://docs.confluent.io/platform/current/installation/migrate-zk-kraft.html
-##
-interBrokerProtocolVersion: ""
+
 ## Kafka listeners configuration
 ##
 listeners:
-  ## @param listeners.client.name Name for the Kafka client listener
-  ## @param listeners.client.containerPort Port for the Kafka client listener
-  ## @param listeners.client.protocol Security protocol for the Kafka client listener. Allowed values are 'PLAINTEXT', 'SASL_PLAINTEXT', 'SASL_SSL' and 'SSL'
-  ## @param listeners.client.sslClientAuth Optional. If SASL_SSL is enabled, configure mTLS TLS authentication type. If SSL protocol is enabled, overrides tls.authType for this listener. Allowed values are 'none', 'requested' and 'required'
   client:
     containerPort: 9092
     protocol: SASL_PLAINTEXT
     name: CLIENT
-    sslClientAuth: ""
-  ## @param listeners.controller.name Name for the Kafka controller listener
-  ## @param listeners.controller.containerPort Port for the Kafka controller listener
-  ## @param listeners.controller.protocol Security protocol for the Kafka controller listener. Allowed values are 'PLAINTEXT', 'SASL_PLAINTEXT', 'SASL_SSL' and 'SSL'
-  ## @param listeners.controller.sslClientAuth Optional. If SASL_SSL is enabled, configure mTLS TLS authentication type. If SSL protocol is enabled, overrides tls.authType for this listener. Allowed values are 'none', 'requested' and 'required'
-  ## Ref: https://cwiki.apache.org/confluence/display/KAFKA/KIP-684+-+Support+mutual+TLS+authentication+on+SASL_SSL+listeners
+
   controller:
     name: CONTROLLER
     containerPort: 9093
     protocol: SASL_PLAINTEXT
-    sslClientAuth: ""
-  ## @param listeners.interbroker.name Name for the Kafka inter-broker listener
-  ## @param listeners.interbroker.containerPort Port for the Kafka inter-broker listener
-  ## @param listeners.interbroker.protocol Security protocol for the Kafka inter-broker listener. Allowed values are 'PLAINTEXT', 'SASL_PLAINTEXT', 'SASL_SSL' and 'SSL'
-  ## @param listeners.interbroker.sslClientAuth Optional. If SASL_SSL is enabled, configure mTLS TLS authentication type. If SSL protocol is enabled, overrides tls.authType for this listener. Allowed values are 'none', 'requested' and 'required'
+
   interbroker:
     containerPort: 9094
     protocol: SASL_PLAINTEXT
     name: INTERNAL
-    sslClientAuth: ""
-  ## @param listeners.external.containerPort Port for the Kafka external listener
-  ## @param listeners.external.protocol Security protocol for the Kafka external listener. . Allowed values are 'PLAINTEXT', 'SASL_PLAINTEXT', 'SASL_SSL' and 'SSL'
-  ## @param listeners.external.name Name for the Kafka external listener
-  ## @param listeners.external.sslClientAuth Optional. If SASL_SSL is enabled, configure mTLS TLS authentication type. If SSL protocol is enabled, overrides tls.sslClientAuth for this listener. Allowed values are 'none', 'requested' and 'required'
+
   external:
     containerPort: 9095
     protocol: SASL_PLAINTEXT
     name: EXTERNAL
-    sslClientAuth: ""
-  ## @param listeners.extraListeners Array of listener objects to be appended to already existing listeners
-  ## E.g.
-  ## extraListeners:
-  ##  - name: CUSTOM
-  ##    containerPort: 9097
-  ##    protocol: SASL_PLAINTEXT
-  ##    sslClientAuth: ""
-  ##
-  extraListeners: []
-  ## NOTE: If set, below values will override configuration set using the above values (extraListeners.*, controller.*, interbroker.*, client.* and external.*)
-  ## @param listeners.overrideListeners Overrides the Kafka 'listeners' configuration setting.
-  ## @param listeners.advertisedListeners Overrides the Kafka 'advertised.listener' configuration setting.
-  ## @param listeners.securityProtocolMap Overrides the Kafka 'security.protocol.map' configuration setting.
-  overrideListeners: ""
-  advertisedListeners: ""
-  securityProtocolMap: ""
+
 ## @section Kafka SASL parameters
 ## Kafka SASL settings for authentication, required if SASL_PLAINTEXT or SASL_SSL listeners are configured
 ##
@@ -152,54 +58,25 @@ sasl:
   ## @param sasl.controllerMechanism SASL mechanism for controller communications.
   ##
   controllerMechanism: PLAIN
-  ## Settings for oauthbearer mechanism
-  ## @param sasl.oauthbearer.tokenEndpointUrl The URL for the OAuth/OIDC identity provider
-  ## @param sasl.oauthbearer.jwksEndpointUrl The OAuth/OIDC provider URL from which the provider's JWKS (JSON Web Key Set) can be retrieved
-  ## @param sasl.oauthbearer.expectedAudience The comma-delimited setting for the broker to use to verify that the JWT was issued for one of the expected audiences
-  ## @param sasl.oauthbearer.subClaimName The OAuth claim name for the subject.
-  ##
-  oauthbearer:
-    tokenEndpointUrl: ""
-    jwksEndpointUrl: ""
-    expectedAudience: ""
-    subClaimName: "sub"
+
   ## Credentials for inter-broker communications.
-  ## @param sasl.interbroker.user Username for inter-broker communications when SASL is enabled
-  ## @param sasl.interbroker.password Password for inter-broker communications when SASL is enabled. If not set and SASL is enabled for the controller listener, a random password will be generated.
-  ## @param sasl.interbroker.clientId Client ID for inter-broker communications when SASL is enabled with mechanism OAUTHBEARER
-  ## @param sasl.interbroker.clientSecret Client Secret for inter-broker communications when SASL is enabled with mechanism OAUTHBEARER. If not set and SASL is enabled for the controller listener, a random secret will be generated.
-  ##
   interbroker:
     user: inter_broker_user
-    password: ""
+    password: "changeme"
     clientId: inter_broker_client
-    clientSecret: ""
+
   ## Credentials for controller communications.
-  ## @param sasl.controller.user Username for controller communications when SASL is enabled
-  ## @param sasl.controller.password Password for controller communications when SASL is enabled. If not set and SASL is enabled for the inter-broker listener, a random password will be generated.
-  ## @param sasl.controller.clientId Client ID for controller communications when SASL is enabled with mechanism OAUTHBEARER
-  ## @param sasl.controller.clientSecret Client Secret for controller communications when SASL is enabled with mechanism OAUTHBEARER. If not set and SASL is enabled for the inter-broker listener, a random secret will be generated.
-  ##
   controller:
     user: controller_user
-    password: ""
+    password: "changeme"
     clientId: controller_broker_client
-    clientSecret: ""
+
   ## Credentials for client communications.
-  ## @param sasl.client.users Comma-separated list of usernames for client communications when SASL is enabled
-  ## @param sasl.client.passwords Comma-separated list of passwords for client communications when SASL is enabled, must match the number of client.users
-  ##
   client:
     users:
       - user1
     passwords: "changeme"
-  ## Credentials for Zookeeper communications.
-  ## @param sasl.zookeeper.user Username for zookeeper communications when SASL is enabled.
-  ## @param sasl.zookeeper.password Password for zookeeper communications when SASL is enabled.
-  ##
-  zookeeper:
-    user: ""
-    password: ""
+
   ## @param sasl.existingSecret Name of the existing secret containing credentials for clientUsers, interBrokerUser, controllerUser and zookeeperUser
   ## Create this secret running the command below where SECRET_NAME is the name of the secret you want to create:
   ##       kubectl create secret generic SECRET_NAME --from-literal=client-passwords=CLIENT_PASSWORD1,CLIENT_PASSWORD2 --from-literal=inter-broker-password=INTER_BROKER_PASSWORD --from-literal=inter-broker-client-secret=INTER_BROKER_CLIENT_SECRET --from-literal=controller-password=CONTROLLER_PASSWORD --from-literal=controller-client-secret=CONTROLLER_CLIENT_SECRET --from-literal=zookeeper-password=ZOOKEEPER_PASSWORD
@@ -207,205 +84,7 @@ sasl:
   ## Client, interbroker and controller passwords are only required if the sasl mechanism includes something other than oauthbearer.
   ##
   existingSecret: ""
-## @section Kafka TLS parameters
-## Kafka TLS settings, required if SSL or SASL_SSL listeners are configured
-##
-tls:
-  ## @param tls.type Format to use for TLS certificates. Allowed types: `JKS` and `PEM`
-  ##
-  type: JKS
-  ## @param tls.pemChainIncluded Flag to denote that the Certificate Authority (CA) certificates are bundled with the endpoint cert.
-  ## Certificates must be in proper order, where the top certificate is the leaf and the bottom certificate is the top-most intermediate CA.
-  ##
-  pemChainIncluded: false
-  ## @param tls.existingSecret Name of the existing secret containing the TLS certificates for the Kafka nodes.
-  ## When using 'jks' format for certificates, each secret should contain a truststore and a keystore.
-  ## Create these secrets following the steps below:
-  ## 1) Generate your truststore and keystore files. Helpful script: https://raw.githubusercontent.com/confluentinc/confluent-platform-security-tools/master/kafka-generate-ssl.sh
-  ## 2) Rename your truststore to `kafka.truststore.jks`.
-  ## 3) Rename your keystores to `kafka-<role>-X.keystore.jks` where X is the replica number of the .
-  ## 4) Run the command below one time per broker to create its associated secret (SECRET_NAME_X is the name of the secret you want to create):
-  ##      kubectl create secret generic SECRET_NAME_0 --from-file=kafka.truststore.jks=./kafka.truststore.jks \
-  ##        --from-file=kafka-controller-0.keystore.jks=./kafka-controller-0.keystore.jks --from-file=kafka-broker-0.keystore.jks=./kafka-broker-0.keystore.jks ...
-  ##
-  ## NOTE: Alternatively, a single keystore can be provided for all nodes under the key 'kafka.keystore.jks', this keystore will be used by all nodes unless overridden by the 'kafka-<role>-X.keystore.jks' file
-  ##
-  ## When using 'pem' format for certificates, each secret should contain a public CA certificate, a public certificate and one private key.
-  ## Create these secrets following the steps below:
-  ## 1) Create a certificate key and signing request per Kafka broker, and sign the signing request with your CA
-  ## 2) Rename your CA file to `kafka-ca.crt`.
-  ## 3) Rename your certificates to `kafka-X.tls.crt` where X is the ID of each Kafka broker.
-  ## 3) Rename your keys to `kafka-X.tls.key` where X is the ID of each Kafka broker.
-  ## 4) Run the command below one time per broker to create its associated secret (SECRET_NAME_X is the name of the secret you want to create):
-  ##      kubectl create secret generic SECRET_NAME_0 --from-file=kafka-ca.crt=./kafka-ca.crt --from-file=kafka-controller-0.crt=./kafka-controller-0.crt --from-file=kafka-controller-0.key=./kafka-controller-0.key \
-  ##        --from-file=kafka-broker-0.crt=./kafka-broker-0.crt --from-file=kafka-broker-0.key=./kafka-broker-0.key ...
-  ##
-  ## NOTE: Alternatively, a single key and certificate can be provided for all nodes under the keys 'kafka.crt' and 'kafka.key'. These certificates will be used by all nodes unless overridden by the 'kafka-<role>-X.key' and 'kafka-<role>-X.crt' files
-  ## NOTE: Alternatively, a single key and certificate can be provided for all nodes under the keys 'tls.crt' and 'tls.key'. These certificates will be used by all nodes unless overridden by the 'kafka-<role>-X.key' and 'kafka-<role>-X.crt' files
-  ##
-  existingSecret: ""
-  ## @param tls.autoGenerated Generate automatically self-signed TLS certificates for Kafka brokers. Currently only supported if `tls.type` is `PEM`
-  ## Note: ignored when using 'jks' format or `tls.existingSecret` is not empty
-  ##
-  autoGenerated: false
-  ## @param tls.customAltNames Optionally specify extra list of additional subject alternative names (SANs) for the automatically generated TLS certificates.
-  ##
-  customAltNames: []
-  ## @param tls.passwordsSecret Name of the secret containing the password to access the JKS files or PEM key when they are password-protected. (`key`: `password`)
-  ##
-  passwordsSecret: ""
-  ## @param tls.passwordsSecretKeystoreKey The secret key from the tls.passwordsSecret containing the password for the Keystore.
-  ##
-  passwordsSecretKeystoreKey: keystore-password
-  ## @param tls.passwordsSecretTruststoreKey The secret key from the tls.passwordsSecret containing the password for the Truststore.
-  ##
-  passwordsSecretTruststoreKey: truststore-password
-  ## @param tls.passwordsSecretPemPasswordKey The secret key from the tls.passwordsSecret containing the password for the PEM key inside 'tls.passwordsSecret'.
-  ##
-  passwordsSecretPemPasswordKey: ""
-  ## @param tls.keystorePassword Password to access the JKS keystore when it is password-protected. Ignored when 'tls.passwordsSecret' is provided.
-  ## When using tls.type=PEM, the generated keystore will use this password or randomly generate one.
-  ##
-  keystorePassword: ""
-  ## @param tls.truststorePassword Password to access the JKS truststore when it is password-protected. Ignored when 'tls.passwordsSecret' is provided.
-  ## When using tls.type=PEM, the generated keystore will use this password or randomly generate one.
-  ##
-  truststorePassword: ""
-  ## @param tls.keyPassword Password to access the PEM key when it is password-protected.
-  ## Note: ignored when using 'tls.passwordsSecret'
-  ##
-  keyPassword: ""
-  ## @param tls.jksKeystoreKey The secret key from the `tls.existingSecret` containing the keystore
-  ## Note: ignored when using 'pem' format for certificates.
-  ##
-  jksKeystoreKey: ""
-  ## @param tls.jksTruststoreSecret Name of the existing secret containing your truststore if truststore not existing or different from the one in the `tls.existingSecret`
-  ## Note: ignored when using 'pem' format for certificates.
-  ##
-  jksTruststoreSecret: ""
-  ## @param tls.jksTruststoreKey The secret key from the `tls.existingSecret` or `tls.jksTruststoreSecret` containing the truststore
-  ## Note: ignored when using 'pem' format for certificates.
-  ##
-  jksTruststoreKey: ""
-  ## @param tls.endpointIdentificationAlgorithm The endpoint identification algorithm to validate server hostname using server certificate
-  ## Disable server host name verification by setting it to an empty string.
-  ## ref: https://docs.confluent.io/current/kafka/authentication_ssl.html#optional-settings
-  ##
-  endpointIdentificationAlgorithm: https
-  ## @param tls.sslClientAuth Sets the default value for the ssl.client.auth Kafka setting.
-  ## ref: https://docs.confluent.io/current/kafka/authentication_ssl.html#optional-settings
-  ##
-  sslClientAuth: "required"
-  ## Zookeeper TLS connection configuration for Kafka
-  ##
-  zookeeper:
-    ## @param tls.zookeeper.enabled Enable TLS for Zookeeper client connections.
-    ##
-    enabled: false
-    ## @param tls.zookeeper.verifyHostname Hostname validation.
-    ##
-    verifyHostname: true
-    ## @param tls.zookeeper.existingSecret Name of the existing secret containing the TLS certificates for ZooKeeper client communications.
-    ##
-    existingSecret: ""
-    ## @param tls.zookeeper.existingSecretKeystoreKey The secret key from the  tls.zookeeper.existingSecret containing the Keystore.
-    ##
-    existingSecretKeystoreKey: zookeeper.keystore.jks
-    ## @param tls.zookeeper.existingSecretTruststoreKey The secret key from the tls.zookeeper.existingSecret containing the Truststore.
-    ##
-    existingSecretTruststoreKey: zookeeper.truststore.jks
-    ## @param tls.zookeeper.passwordsSecret Existing secret containing Keystore and Truststore passwords.
-    ##
-    passwordsSecret: ""
-    ## @param tls.zookeeper.passwordsSecretKeystoreKey The secret key from the tls.zookeeper.passwordsSecret containing the password for the Keystore.
-    ## If no keystore password is included in the passwords secret, set this value to an empty string.
-    ##
-    passwordsSecretKeystoreKey: keystore-password
-    ## @param tls.zookeeper.passwordsSecretTruststoreKey The secret key from the tls.zookeeper.passwordsSecret containing the password for the Truststore.
-    ## If no truststore password is included in the passwords secret, set this value to an empty string.
-    ##
-    passwordsSecretTruststoreKey: truststore-password
-    ## @param tls.zookeeper.keystorePassword Password to access the JKS keystore when it is password-protected. Ignored when 'tls.passwordsSecret' is provided.
-    ## When using tls.type=PEM, the generated keystore will use this password or randomly generate one.
-    ##
-    keystorePassword: ""
-    ## @param tls.zookeeper.truststorePassword Password to access the JKS truststore when it is password-protected. Ignored when 'tls.passwordsSecret' is provided.
-    ## When using tls.type=PEM, the generated keystore will use this password or randomly generate one.
-    ##
-    truststorePassword: ""
-## @param extraEnvVars Extra environment variables to add to Kafka pods
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/kafka#configuration
-## e.g:
-## extraEnvVars:
-##   - name: KAFKA_CFG_BACKGROUND_THREADS
-##     value: "10"
-##
-extraEnvVars: []
-## @param extraEnvVarsCM ConfigMap with extra environment variables
-##
-extraEnvVarsCM: ""
-## @param extraEnvVarsSecret Secret with extra environment variables
-##
-extraEnvVarsSecret: ""
-## @param extraVolumes Optionally specify extra list of additional volumes for the Kafka pod(s)
-## e.g:
-## extraVolumes:
-##   - name: kafka-jaas
-##     secret:
-##       secretName: kafka-jaas
-##
-extraVolumes: []
-## @param extraVolumeMounts Optionally specify extra list of additional volumeMounts for the Kafka container(s)
-## extraVolumeMounts:
-##   - name: kafka-jaas
-##     mountPath: /bitnami/kafka/config/kafka_jaas.conf
-##     subPath: kafka_jaas.conf
-##
-extraVolumeMounts: []
-## @param sidecars Add additional sidecar containers to the Kafka pod(s)
-## e.g:
-## sidecars:
-##   - name: your-image-name
-##     image: your-image
-##     imagePullPolicy: Always
-##     ports:
-##       - name: portname
-##         containerPort: 1234
-##
-sidecars: []
-## @param initContainers Add additional Add init containers to the Kafka pod(s)
-## e.g:
-## initContainers:
-##   - name: your-image-name
-##     image: your-image
-##     imagePullPolicy: Always
-##     ports:
-##       - name: portname
-##         containerPort: 1234
-##
-initContainers: []
-## DNS-Pod services
-## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
-## @param dnsPolicy Specifies the DNS policy for the zookeeper pods
-## DNS policies can be set on a per-Pod basis. Currently Kubernetes supports the following Pod-specific DNS policies.
-## Available options: Default, ClusterFirst, ClusterFirstWithHostNet, None
-## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
-dnsPolicy: ""
-## @param dnsConfig  allows users more control on the DNS settings for a Pod. Required if `dnsPolicy` is set to `None`
-## The dnsConfig field is optional and it can work with any dnsPolicy settings.
-## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
-## E.g.
-## dnsConfig:
-##   nameservers:
-##     - 192.0.2.1 # this is an example
-##   searches:
-##     - ns1.svc.cluster-domain.example
-##     - my.dns.search.suffix
-##   options:
-##     - name: ndots
-##       value: "2"
-##     - name: edns0
-dnsConfig: {}
+
 ## @section Controller-eligible statefulset parameters
 ##
 controller:
