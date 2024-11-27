@@ -66,11 +66,21 @@ for vm in "${vms[@]}"; do
     fi
 
 
+    echo "Install Helm to virtual machine $vmname"
     helm_installed=$(vagrant ssh $vmname -c "command -v helm")
     if [ -z $helm_installed ]; then
         echo "Helm not installed. Install it"
         vagrant ssh $vmname -c "sudo cp /root/rke2-artifacts/helm /usr/local/bin/helm"
     else
         echo "Helm already installed. Skip"
+    fi
+
+    echo "Install keepalived to virtual machine $vmname"
+    keepalived_installed=$(vagrant ssh $vmname -c "command -v keepalived")
+    if [ -z $keepalived_installed ]; then
+        echo "Keepalived not installed. Install it"
+        vagrant ssh $vmname -c "sudo apt install -y keepalived"
+    else
+        echo "Keepalived already installed. Skip"
     fi
 done
