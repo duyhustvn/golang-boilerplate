@@ -448,13 +448,13 @@ service:
 externalAccess:
   ## @param externalAccess.enabled Enable Kubernetes external cluster access to Kafka brokers
   ##
-  enabled: false
+  enabled: true
   ## External IPs auto-discovery configuration
   ## An init container is used to auto-detect LB IPs or node ports by querying the K8s API
   ## Note: RBAC might be required
   ##
   autoDiscovery:
-    enabled: true
+    enabled: false
   ## Service settings
   controller:
     service:
@@ -465,6 +465,8 @@ externalAccess:
       ##
       ports:
         external: 9094
+      loadBalancerIPs: ['192.168.56.101', '192.168.56.102', '192.168.56.103']
+      # loadBalancerNames: ['master-1', 'master-2', 'master-3']
   broker:
     ## Parameters to configure K8s service(s) used to externally access Kafka brokers
     ## Note: A new service per broker will be created
