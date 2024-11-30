@@ -9,3 +9,5 @@ declare -a vms=(
 
 RKE2_DOWNLOAD_DIRECTORY=./rke2-artifacts
 HELM_CHART_DOWNLOAD_DIRECTORY=./rke2-artifacts/helm-chart
+VIRTUAL_IPADDRESS=192.168.56.100
+VM_INTERFACE=enp0s8
