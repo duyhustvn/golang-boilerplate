@@ -10,3 +10,4 @@ sample/**
 secret-env.yaml
 
 .vagrant
+*.jar
