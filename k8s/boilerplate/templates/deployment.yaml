@@ -71,7 +71,10 @@ spec:
             - name: KAFKA_CLIENT_USER
               value: {{ .Values.kafkaClientUser | quote }}
             - name: KAFKA_CLIENT_PASSWORD
-              value: {{ .Values.kafkaClientPassword | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-user-passwords
+                  key: client-passwords
             - name: KAFKA_GROUP_ID
               value: {{ .Values.kafkaGroupId | quote }}
             - name: KAFKA_POOL_SIZE
@@ -90,9 +93,12 @@ spec:
               value: {{ .Values.postgresHost | quote }}
             - name: POSTGRES_PORT
               value: {{ .Values.postgresPort | quote }}
+            - name: POSTGRES_DBNAME
+              value: {{ .Values.postgresDbName | quote }}
             - name: POSTGRES_USERNAME
               value: {{ .Values.postgresUsername | quote }}
             - name: POSTGRES_PASSWORD
-              value: {{ .Values.postgresPassword | quote }}
-            - name: POSTGRES_DBNAME
-              value: {{ .Values.postgresDbName | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-ha-postgresql
+                  key: password

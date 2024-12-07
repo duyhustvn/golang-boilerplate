@@ -2,5 +2,5 @@
 
 * Deploy using helm
 #+begin_src shell
-helm upgrade --install kafka -f values.yaml bitnami/kafka
+helm upgrade --install kafka -f values.yaml bitnami/kafka --version 28.0.3
 #+end_src

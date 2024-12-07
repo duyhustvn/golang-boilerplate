@@ -1,13 +1,9 @@
 .DS_Store
 .idea
 *.log
-sample/**
 .env
-
 *.o
 *.out
-
 secret-env.yaml
-
 .vagrant
 *.jar

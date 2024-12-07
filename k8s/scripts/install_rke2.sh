@@ -53,6 +53,8 @@ fi
 for vm in "${vms[@]}"; do
     ip=$(echo $vm | awk '{print $1}')
     vmname=$(echo $vm | awk '{print $2}')
+    hostname=$(echo $vm | awk '{print $3}')
+
     echo "Copy Rke2 to virtual machine $vmname"
     vagrant rsync $vmname
 
@@ -66,6 +68,7 @@ for vm in "${vms[@]}"; do
     fi
 
 
+    echo "Install Helm to virtual machine $vmname"
     helm_installed=$(vagrant ssh $vmname -c "command -v helm")
     if [ -z $helm_installed ]; then
         echo "Helm not installed. Install it"
@@ -73,4 +76,53 @@ for vm in "${vms[@]}"; do
     else
         echo "Helm already installed. Skip"
     fi
+
+    echo "Install keepalived to virtual machine $vmname"
+    keepalived_installed=$(vagrant ssh $vmname -c "command -v keepalived")
+    if [ -z $keepalived_installed ]; then
+        echo "Keepalived not installed. Install it"
+        vagrant ssh $vmname -c "sudo apt install -y keepalived"
+    else
+        echo "Keepalived already installed. Skip"
+    fi
+
+    # Set the state of keepalived
+    if [[ $hostname == 'master-1' ]]; then
+        state='MASTER'
+    else
+        state='BACKUP'
+    fi
+
+    vagrant ssh $vmname -c "
+cat <<EOF > ~/keepalived.conf
+# document: https://www.keepalived.org/manpage.html
+
+global_defs {
+    vrrp_version: 2 # 2 for IPv4, 3 for IPv6
+}
+
+vrrp_instance k8s {
+    state $state
+    interface $VM_INTERFACE     # Network interface to bind VIP
+    virtual_router_id 51 # arbitrary unique number from 1 to 255
+    priority 100         # for electing MASTER, highest priority wins.
+    advert_int 2         # Advertisement interval in seconds
+
+    authentication {
+        auth_type PASS
+        auth_pass changeme
+    }
+
+    virtual_ipaddress {
+        $VIRTUAL_IPADDRESS  # The shared VIP
+    }
+}
+EOF
+"
+    vagrant ssh $vmname -c "sudo mv ~/keepalived.conf /etc/keepalived/keepalived.conf"
+    echo "Enable keepalived"
+    vagrant ssh $vmname -c 'sudo systemctl start keepalived'
+    echo "Start keepalived"
+    vagrant ssh $vmname -c 'sudo systemctl enable keepalived'
+
 done

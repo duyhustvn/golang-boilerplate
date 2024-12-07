@@ -12,7 +12,7 @@ redisPoolSize: 20
 
 kafkaBrokers: kafka:9092
 kafkaGroupId: boilerplate
-kafkaClientUser: user1
+kafkaClientUser: user
 kafkaPoolSize: 30
 kafkaSignupUserTopic: register
 
