@@ -22,6 +22,10 @@ for (( i=1; i<${#vms[@]}; i++ )); do
     vmname=$(echo $vm | awk '{print $2}')
     hostname=$(echo $vm | awk '{print $3}')
 
+
+    ###############
+    # RKE2 Config #
+    ###############
     vagrant ssh $vmname -c 'sudo mkdir -p /etc/rancher/rke2'
     vagrant ssh $vmname -c "
 cat <<EOF > ~/config.yaml
@@ -42,10 +46,29 @@ EOF
 "
     vagrant ssh $vmname -c 'sudo mv config.yaml /etc/rancher/rke2'
 
+    ################
+    # Canal Config #
+    ################
+    vagrant ssh $vmname -c 'sudo mkdir -p /var/lib/rancher/rke2/server/manifests'
+    vagrant ssh $vmname -c "
+cat <<EOF > ~/rke2-canal.yaml
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: rke2-canal
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    flannel:
+      iface: "${VM_INTERFACE}"
+EOF
+"
+    vagrant ssh $vmname -c 'sudo mv rke2-canal.yaml /var/lib/rancher/rke2/server/manifests'
+
     echo "Enable rke2-server"
     vagrant ssh $vmname -c 'sudo systemctl enable rke2-server'
     echo "Start rke2-server"
-    vagrant ssh $vmname -c 'sudo systemctl start rke2-server'
+    vagrant ssh $vmname -c 'sudo systemctl restart rke2-server'
 
     echo "Install kubectl"
 
@@ -57,6 +80,6 @@ EOF
       echo "kubectl already installed. skip"
     fi
 
-    echo "Make symbol link for kube config to /root/.kube/config"
-    vagrant ssh $vmname -c "sudo mkdir -p /root/.kube && sudo ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config"
+    # echo "Make symbol link for kube config to /root/.kube/config"
+    # vagrant ssh $vmname -c "if [ ! -f /root/.kube/config ]; then sudo mkdir -p /root/.kube && sudo ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config; fi"
 done
