@@ -16,16 +16,6 @@ services:
     volumes:
       - postgresql16_data:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4:8
-    restart: always
-    container_name: pgadmin
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=changeme
-    ports:
-      - 4848:80
-
 volumes:
   postgresql16_data:
     name: postgresql16_data

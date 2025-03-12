@@ -1,0 +1,69 @@
+x-extra-hosts: &extra-hosts
+  extra_hosts:
+    - ${EXTRA_HOST_01}
+    - ${EXTRA_HOST_02}
+    - ${EXTRA_HOST_03}
+
+services:
+  postgresql:
+    image: bitnami/postgresql-repmgr:17
+    secrets:
+      - postgres_password
+      - repmgr_password
+    restart: always
+    container_name: postgresql-ha
+    environment:
+      - POSTGRESQL_PASSWORD_FILE=/run/secrets/postgres_password
+      - REPMGR_PRIMARY_HOST=node-db-01
+      - REPMGR_PRIMARY_PORT=5433
+      - REPMGR_PORT_NUMBER=5433
+      - REPMGR_PASSWORD_FILE=/run/secrets/repmgr_password
+      - REPMGR_PARTNER_NODES=node-db-01:5433,node-db-02:5434,node-db-03:5435
+      - REPMGR_NODE_NAME=node-db-01
+      - REPMGR_NODE_NETWORK_NAME=node-db-01
+      - REPMGR_START_AS_PRIMARY=true  # Only on VM1 initially
+      - POSTGRESQL_SHARED_PRELOAD_LIBRARIES=pgaudit,pg_stat_statements
+      - REPMGR_LOG_LEVEL=DEBUG
+      - BITNAMI_DEBUG=true
+    volumes:
+      - postgres_data_01:/bitnami/postgresql
+      - ../docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ../custom-conf/pg_hba.conf:/bitnami/repmgr/conf/pg_hba.conf
+    ports:
+      - 5433:5432
+    <<: *extra-hosts
+
+  pgpool:
+    image: bitnami/pgpool:4
+    secrets:
+      - postgres_password
+      - repmgr_password
+    restart: always
+    #container_name: pgpool
+    environment:
+      - PGPOOL_BACKEND_NODES=0:node-db-01:5433,1:node-db-02:5434,2:node-db-03:5435
+      - PGPOOL_SR_CHECK_USER=postgres #  Username to use to perform streaming checks.
+      - PGPOOL_SR_CHECK_PASSWORD_FILE=/run/secrets/postgres_password
+      - PGPOOL_POSTGRES_USERNAME=postgres # Postgres administrator user name
+      - PGPOOL_POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - PGPOOL_ENABLE_LOAD_BALANCING=yes
+      - PGPOOL_ENABLE_FAILOVER=yes
+      - PGPOOL_ADMIN_USERNAME=admin
+      - PGPOOL_ADMIN_PASSWORD=adminpassword
+      - PGPOOL_PORT_NUMBER=5432
+    ports:
+      - 9999:5432
+    <<: *extra-hosts
+    depends_on:
+      - postgresql
+
+secrets:
+  postgres_password:
+    file: ../secrets/postgres_password.txt
+  repmgr_password:
+    file: ../secrets/repmgr_password.txt
+
+volumes:
+  postgres_data_01:
+    driver: local
+    name: postgres_data_01
