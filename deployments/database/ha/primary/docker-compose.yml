@@ -11,7 +11,7 @@ services:
       - postgres_password
       - repmgr_password
     restart: always
-    container_name: postgresql-ha
+    container_name: postgresql-ha-01
     environment:
       - POSTGRESQL_PASSWORD_FILE=/run/secrets/postgres_password
       - REPMGR_PRIMARY_HOST=node-db-01
@@ -51,6 +51,11 @@ services:
       - PGPOOL_ADMIN_USERNAME=admin
       - PGPOOL_ADMIN_PASSWORD=adminpassword
       - PGPOOL_PORT_NUMBER=5432
+    healthcheck:
+      test: ["CMD", "/opt/bitnami/scripts/pgpool/healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - 9999:5432
     <<: *extra-hosts

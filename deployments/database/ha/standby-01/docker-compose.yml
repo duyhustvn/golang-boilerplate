@@ -11,7 +11,7 @@ services:
       - postgres_password
       - repmgr_password
     restart: always
-    #container_name: postgresql-ha
+    container_name: postgresql-ha-02
     environment:
       - POSTGRESQL_PASSWORD_FILE=/run/secrets/postgres_password
       - REPMGR_PRIMARY_HOST=node-db-01
