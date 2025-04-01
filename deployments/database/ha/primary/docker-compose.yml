@@ -37,7 +37,7 @@ services:
     image: bitnami/pgpool:4
     secrets:
       - postgres_password
-      - repmgr_password
+      - pgpool_admin_password
     restart: always
     #container_name: pgpool
     environment:
@@ -49,7 +49,7 @@ services:
       - PGPOOL_ENABLE_LOAD_BALANCING=yes
       - PGPOOL_ENABLE_FAILOVER=yes
       - PGPOOL_ADMIN_USERNAME=admin
-      - PGPOOL_ADMIN_PASSWORD=adminpassword
+      - PGPOOL_ADMIN_PASSWORD_FILE=/run/secrets/pgpool_admin_password
       - PGPOOL_PORT_NUMBER=5432
     healthcheck:
       test: ["CMD", "/opt/bitnami/scripts/pgpool/healthcheck.sh"]
@@ -67,6 +67,8 @@ secrets:
     file: ../secrets/postgres_password.txt
   repmgr_password:
     file: ../secrets/repmgr_password.txt
+  pgpool_admin_password:
+    file: ../secrets/pgpool_admin_password.txt
 
 volumes:
   postgres_data_01:
