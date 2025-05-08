@@ -25,6 +25,9 @@ Vagrant.configure("2") do |config|
   
         # Provision the VM with the hosts entries
         vm_config.vm.provision "shell", inline: <<-SHELL
+          # Set hostname
+          hostnamectl set-hostname #{vm[:hostname]}
+          echo "127.0.0.1 #{vm[:hostname]}" >> /etc/hosts
           echo "#{hosts_entries}" >> /etc/hosts
 
           # Add SSH public key to authorized keys
