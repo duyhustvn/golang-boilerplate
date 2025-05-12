@@ -10,14 +10,14 @@ sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail htt
 . /etc/os-release
 sudo sh -c "echo 'deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc]  https://apt.postgresql.org/pub/repos/apt $VERSION_CODENAME-pgdg main' > /etc/apt/sources.list.d/pgdg.list"
 sudo apt update
-sudo apt -y install postgresql-16
+sudo apt install -y postgresql-16
 
 echo "Install patroni and etcd"
 sudo apt install -y python3-pip python3-dev binutils 
 sudo apt install -y patroni etcd etcd-server etcd-client pgbackrest
 
 echo "Install HAProxy and Keepalived"
-sudo apt install haproxy keepalived
+sudo apt install -y haproxy keepalived
 
 echo "Install Pgbouncer"
-sudo apt install pgbouncer
+sudo apt install -y pgbouncer
