@@ -10,12 +10,16 @@ NODE_1_NAME=node-db-01
 NODE_2_NAME=node-db-02
 NODE_3_NAME=node-db-03
 
+ETCD_1_NAME=postgres01
+ETCD_2_NAME=postgres02
+ETCD_3_NAME=postgres03
+
 VIP=192.168.56.100 
 
 VM_LIST=(
-  "$NODE_1_IP $NODE_1_NAME MASTER 0"
-  "$NODE_2_IP $NODE_2_NAME BACKUP 1"
-  "$NODE_3_IP $NODE_3_NAME BACKUP 2"
+  "$NODE_1_IP $NODE_1_NAME MASTER 0 $ETCD_1_NAME"
+  "$NODE_2_IP $NODE_2_NAME BACKUP 1 $ETCD_2_NAME"
+  "$NODE_3_IP $NODE_3_NAME BACKUP 2 $ETCD_3_NAME"
 )
 
 get_node_ip_from_interface() {
@@ -33,6 +37,7 @@ get_node_ip_from_interface() {
       vm_name=$(echo "$vm" | awk '{print $2}')
       keepalived_role=$(echo "$vm" | awk '{print $3}')
       pgpool_node_id=$(echo "$vm" | awk '{print $4}')
+      etcd_name=$(echo "$vm" | awk '{print $5}')
 
       if [[ "$ip" == "$vm_ip" ]]; then
         NODE_IP="$ip"
@@ -44,6 +49,7 @@ get_node_ip_from_interface() {
 		      PRIORITY=90
         fi
         PGPOOL_NODE_ID=$pgpool_node_id
+        ETCD_NAME=$etcd_name
         return 0
       fi
     done
@@ -62,3 +68,4 @@ echo "Matched NODE_NAME: $NODE_NAME"
 echo "Matched KEEPALIVED_ROLE: $KEEPALIVED_ROLE"
 echo "Matched PRIORITY: $PRIORITY"
 echo "Matched PGPOOL_NODE_ID: $PGPOOL_NODE_ID"
+echo "Matched ETCD_NAME: $ETCD_NAME"

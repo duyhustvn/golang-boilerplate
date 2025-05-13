@@ -21,3 +21,6 @@ sudo apt install -y haproxy keepalived
 
 echo "Install Pgbouncer"
 sudo apt install -y pgbouncer
+
+echo "Install Pgpool 2"
+sudo apt install -y pgpool2

@@ -48,17 +48,17 @@ port = 9999
 # BACKEND SETTINGS
 # https://www.pgpool.net/docs/latest/en/html/runtime-config-backend-settings.html
 #------------------------------------------------------------------------------
-backend_hostname0 = ${NODE_1_NAME}
+backend_hostname0 = '${NODE_1_NAME}'
 backend_port0 = 5432
 backend_data_directory0 = '/u01/data/postgresql/16/main'
 backend_flag0 = 'ALLOW_TO_FAILOVER'
 
-backend_hostname1 = ${NODE_2_NAME}
+backend_hostname1 = '${NODE_2_NAME}'
 backend_port1 = 5432
 backend_data_directory1 = '/u01/data/postgresql/16/main'
 backend_flag1 = 'ALLOW_TO_FAILOVER'
 
-backend_hostname2 = ${NODE_3_NAME}
+backend_hostname2 = '${NODE_3_NAME}'
 backend_port2 = 5432
 backend_data_directory2 = '/u01/data/postgresql/16/main'
 backend_flag2 = 'ALLOW_TO_FAILOVER'
@@ -87,6 +87,13 @@ log_standby_delay = 'if_over_threshold'     # Log standby delay Valid values are
 # - Syslog specific -
 syslog_facility = 'LOCAL0'                  # Syslog local facility. Default to LOCAL0
 syslog_ident = 'pgpool'                     # Syslog program identification string 
+
+#------------------------------------------------------------------------------
+# Health Check 
+# https://www.pgpool.net/docs/latest/en/html/runtime-config-health-check.html
+#------------------------------------------------------------------------------
+health_check_user = 'pgpool_health'
+health_check_password = 'health_password'
 
 #------------------------------------------------------------------------------
 # WATCHDOG CONFIGURATION (pgpool HA)
