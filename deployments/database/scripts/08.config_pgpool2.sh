@@ -32,6 +32,9 @@ sudo tee /etc/logrotate.d/pgpool << EOF
 }
 EOF
 
+echo "Copy file pool_hba.conf to /etc/pgpool2/pool_hba.conf"
+sudo cp pgpool2/pool_hba.conf /etc/pgpool2/pool_hba.conf
+
 echo "Config pgpool"
 sudo tee /etc/pgpool2/pgpool.conf << EOF
 
@@ -43,6 +46,7 @@ listen_addresses = '*'
 port = 9999
 
 # TODO: add config for num_init_children: default 32 and config for authentication
+enable_pool_hba = true
 
 #------------------------------------------------------------------------------
 # BACKEND SETTINGS
