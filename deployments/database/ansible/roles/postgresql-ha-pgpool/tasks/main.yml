@@ -1,5 +1,28 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for roles/postgresql-ha-pgpool2
+
 - name: Install PostgreSQL
   include_tasks: install_postgresql.yml
+  tags: [ install, rc_all ]
+
+
+- name: Install Pgpool2
+  include_tasks: install_pgpool2.yml
+  tags: [ install, rc_all ]
+
+- name: Config PostgreSQL
+  template:
+    src: 'postgresql.conf.j2'
+    dest: '{{ pg_config_dir }}/postgresql.conf'
+    mode: '0644'
+    owner: postgres
+    group: postgres
+  tags: [ config, rc_all ]
+
+- name: Restart PostgreSQL service
+  systemd:
+    name: postgresql@{{ postgresql_version }}-main.service
+    state: restarted
+    enabled: yes
+  tags: [ config, rc_all ]
