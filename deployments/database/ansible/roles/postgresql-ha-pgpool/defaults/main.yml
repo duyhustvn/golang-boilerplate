@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for roles/postgresql-ha-pgpool2
+
+pgdg_key_url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+pgdg_key_dest: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+pgdg_repo_file: /etc/apt/sources.list.d/pgdg.list

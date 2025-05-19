@@ -9,6 +9,7 @@ Vagrant.configure("2") do |config|
     vms.each do |vm|
       config.vm.define vm[:name] do |vm_config|
         vm_config.vm.box = "ubuntu/jammy64" # Specify the box you want to use
+        # vm_config.vm.box = "rockylinux/9" # Specify the box you want to use
 
         # Fixed IP addresses for private network
         vm_config.vm.network "private_network", ip: vm[:ip]

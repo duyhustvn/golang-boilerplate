@@ -1,0 +1,5 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/postgresql-ha-pgpool2
+- name: Install PostgreSQL
+  include_tasks: install_postgresql.yml

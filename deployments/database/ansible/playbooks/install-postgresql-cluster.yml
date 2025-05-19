@@ -1,0 +1,15 @@
+---
+- name: Install PostgreSQL cluster with Pgpool
+  hosts: all
+  become: true
+  gather_facts: true
+  pre_tasks:
+    - include_vars: ../group_vars/all/vars.yml
+
+  tasks:
+    - name: Debug
+      debug:
+        msg: "postgresql version: {{ postgresql_version }}"
+
+  roles:
+    - postgresql-ha-pgpool
