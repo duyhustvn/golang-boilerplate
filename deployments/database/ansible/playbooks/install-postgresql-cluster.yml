@@ -5,11 +5,18 @@
   gather_facts: true
   pre_tasks:
     - include_vars: ../group_vars/all/vars.yml
+      tags: [ always ]
 
   tasks:
     - name: Debug
       debug:
-        msg: "postgresql version: {{ postgresql_version }}"
+        msg: "playbook_dir: {{ playbook_dir }}"
+      tags: [ debug ]
+
+    - name: Debug
+      debug:
+        msg: "postgresql version: {{ postgresql_version }}, vip: {{ vip }}"
+      tags: [ debug ]
 
   roles:
     - postgresql-ha-pgpool
