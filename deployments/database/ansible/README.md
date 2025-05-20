@@ -18,7 +18,7 @@ You should only decrypt vaul when you want to update, then remember to encrypt i
 ## Run ansible 
 ---
 **NOTE**
-Please read about (tags)[https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_tags.html] in ansible
+Please read about [tags](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_tags.html) in ansible
 ---
 
 - Run the playbook
