@@ -1,3 +1,6 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # vars file for roles/postgresql-ha-pgpool2
+
+postgresql_version: 17
+pgpool_version: 4.6
