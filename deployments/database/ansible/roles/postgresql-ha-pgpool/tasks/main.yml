@@ -43,27 +43,6 @@
   tags: [ config, rc_all ]
 
 - block:
-    - name: Copy pcp_auth script
-      template:
-        src: pcp_auth.sh.j2
-        dest: '{{ pg_config_dir }}/pcp_auth.sh'
-        mode: '0600'
-        owner: root
-        group: root
-
-    - name: Run pcp_auth script
-      shell: |
-        bash pcp_auth.sh
-      args:
-        chdir: '{{ pg_config_dir }}'
-      register: result
-
-    - name: Show running pcp_auth script result
-      debug:
-        var: result
-
-    - name: Remove pcp_auth script
-      file:
-        path: '{{ pg_config_dir }}/pcp_auth.sh'
-        state: absent
+    - name: Config PCP connection authentication
+      include_tasks: config_pcp_connection_authen.yml
   tags: [ config, rc_all ]
