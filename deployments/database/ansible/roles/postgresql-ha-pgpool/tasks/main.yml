@@ -26,3 +26,9 @@
     state: restarted
     enabled: yes
   tags: [ config, rc_all ]
+
+- block:
+    - name: Config PostgreSQL users
+      include_tasks: config_psql_user.yml
+  when: inventory_hostname == "node-db-01"
+  tags: [ config, rc_all ]

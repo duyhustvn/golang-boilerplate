@@ -10,7 +10,7 @@
   tasks:
     - name: Debug
       debug:
-        msg: "playbook_dir: {{ playbook_dir }}"
+        msg: "playbook_dir: {{ playbook_dir }}, inventory_hostname: {{ inventory_hostname }}"
       tags: [ debug ]
 
     - name: Debug
