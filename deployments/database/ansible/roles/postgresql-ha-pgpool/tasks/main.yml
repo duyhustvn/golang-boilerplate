@@ -46,3 +46,18 @@
     - name: Config PCP connection authentication
       include_tasks: config_pcp_connection_authen.yml
   tags: [ config, rc_all ]
+
+- name: Config pgpool_node_id
+  template:
+    src: pgpool_node_id.j2
+    dest: '{{ pgpool_config_dir }}/pgpool_node_id'
+    mode: '0644'
+    owner: root
+    group: root
+  tags: [ config, rc_all ]
+
+
+- block:
+    - name: Config pgpool
+      include_tasks: config_pgpool.yml
+  tags: [ test, rc_all ]
