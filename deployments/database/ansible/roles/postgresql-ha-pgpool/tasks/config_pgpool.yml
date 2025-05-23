@@ -81,6 +81,15 @@
       shell: |
         sudo pg_enc -m -k {{ postgres_home_dir }}/.pgpoolkey -u postgres {{ pgpool_user_pass }}
 
+- block: # Watch dog
+  - name: Copy escalation.sh
+    template:
+      src:  pgpool2/escalation.sh.j2
+      dest: '{{ pgpool_config_dir }}/escaltion.sh'
+      mode: '0600'
+      owner: postgres
+      group: postgres
+
 - name: Config Pgpool
   template:
     src: pgpool2/pgpool.conf.j2

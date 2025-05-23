@@ -12,4 +12,5 @@
     name:
       - pgpool2
       - postgresql-{{ postgresql_version }}-pgpool2
+      - iputils-arping
     state: present

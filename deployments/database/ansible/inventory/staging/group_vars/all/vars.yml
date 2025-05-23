@@ -7,3 +7,4 @@ pgpool_config_dir: /etc/pgpool2
 pgpool_path: /usr/sbin
 
 pcp_username: pgpool
+device_interface: enp0s8
