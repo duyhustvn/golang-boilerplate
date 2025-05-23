@@ -39,7 +39,7 @@
         owner: postgres
         group: postgres
 
-    - name: Execute the script
+    - name: Execute the script create_pgpool_recovery.sh
       shell: |
         bash create_pgpool_recovery.sh
       args:
@@ -55,6 +55,31 @@
         path: '{{ pg_data_dir }}/create_pgpool_recovery.sh'
         state: absent
   when: inventory_hostname == 'node-db-01'
+
+- block: # Client authentication Configuration
+    - name: Copy pgool_hba.conf to '{{ pgpool_config_dir }}/pool_hba.conf'
+      template:
+        src:  pgpool2/pool_hba.conf.j2
+        dest: '{{ pgpool_config_dir }}/pool_hba.conf'
+        mode: '0644'
+        owner: root
+        group: root
+
+    - name: Create .pgpoolkey
+      template:
+        src:  pgpool2/.pgpoolkey.j2
+        dest: '{{ postgres_home_dir }}/.pgpoolkey'
+        mode: '0600'
+        owner: postgres
+        group: postgres
+
+    - name: Update pool_passwd with pgpool user
+      shell: |
+        sudo pg_enc -m -k {{ postgres_home_dir }}/.pgpoolkey -u pgpool {{ pgpool_user_pass }}
+
+    - name: Update pool_passwd with postgres user
+      shell: |
+        sudo pg_enc -m -k {{ postgres_home_dir }}/.pgpoolkey -u postgres {{ pgpool_user_pass }}
 
 - name: Config Pgpool
   template:
