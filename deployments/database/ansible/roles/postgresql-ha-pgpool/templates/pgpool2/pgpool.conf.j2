@@ -227,7 +227,7 @@ enable_pool_hba = on
 
 # - Where to log -
 
-#log_destination = 'stderr'
+log_destination = 'syslog'
                                    # Where to log
                                    # Valid values are combinations of stderr,
                                    # and syslog. Default to stderr.
@@ -265,9 +265,9 @@ enable_pool_hba = on
 
 # - Syslog specific -
 
-#syslog_facility = 'LOCAL0'
+syslog_facility = 'LOCAL0'
                                    # Syslog local facility. Default to LOCAL0
-#syslog_ident = 'pgpool'
+syslog_ident = 'pgpool'
                                    # Syslog program identification string
                                    # Default to 'pgpool'
 
@@ -745,21 +745,21 @@ delegate_ip = '{{ vip }}'
                                     # delegate IP address
                                     # If this is empty, virtual IP never bring up.
                                     # (change requires restart)
-if_cmd_path = '/sbin'
+if_cmd_path = '{{ if_cmd_path }}'
                                     # path to the directory where if_up/down_cmd exists
                                     # If if_up/down_cmd starts with "/", if_cmd_path will be ignored.
                                     # (change requires restart)
-if_up_cmd = '/usr/bin/sudo /sbin/ip addr add $_IP_$/24 dev {{ device_interface  }} label {{ device_interface }}:0'
+if_up_cmd = '/usr/bin/sudo {{ if_cmd_path }}/ip addr add $_IP_$/24 dev {{ device_interface  }} label {{ device_interface }}:0'
                                     # startup delegate IP command
                                     # (change requires restart)
-if_down_cmd = '/usr/bin/sudo /sbin/ip addr del $_IP_$/24 dev {{ device_interface }}'
+if_down_cmd = '/usr/bin/sudo {{ if_cmd_path }}/ip addr del $_IP_$/24 dev {{ device_interface }}'
                                     # shutdown delegate IP command
                                     # (change requires restart)
-arping_path = '/usr/bin'
+arping_path = '{{ arping_path }}'
                                     # arping command path
                                     # If arping_cmd starts with "/", if_cmd_path will be ignored.
                                     # (change requires restart)
-arping_cmd = '/usr/bin/sudo /usr/bin/arping -U $_IP_$ -w 1 -I {{ device_interface }}'
+arping_cmd = '/usr/bin/sudo {{ arping_path }}/arping -U $_IP_$ -w 1 -I {{ device_interface }}'
                                     # arping command
                                     # (change requires restart)
 

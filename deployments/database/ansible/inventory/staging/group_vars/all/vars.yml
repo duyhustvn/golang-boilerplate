@@ -8,3 +8,7 @@ pgpool_path: /usr/sbin
 
 pcp_username: pgpool
 device_interface: enp0s8
+pgpool_log_dir: /var/log
+
+arping_path: /usr/bin
+if_cmd_path: /sbin

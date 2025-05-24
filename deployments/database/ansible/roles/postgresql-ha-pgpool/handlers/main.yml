@@ -1,3 +1,9 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # handlers file for roles/postgresql-ha-pgpool2
+
+- name: Restart rsyslog
+  become: true
+  systemd:
+    name: rsyslog
+    state: restarted
