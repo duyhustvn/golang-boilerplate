@@ -8,7 +8,7 @@
 
 - name: Copy pcp_auth script
   template:
-    src: pcp_auth.sh.j2
+    src: 'postgresql/pcp_auth.sh.j2'
     dest: '{{ pg_config_dir }}/pcp_auth.sh'
     mode: '0600'
     owner: root

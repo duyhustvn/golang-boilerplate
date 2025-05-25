@@ -1,36 +1,38 @@
-- name: Config failover
-  template:
-    src: pgpool2/failover.sh.j2
-    dest: '{{ pgpool_config_dir }}/failover.sh'
-    mode: '0644'
-    owner: postgres
-    group: postgres
+---
+- block: # Failover configuration
+    - name: Config failover.sh script
+      template:
+        src: pgpool2/failover.sh.j2
+        dest: '{{ pgpool_config_dir }}/failover.sh'
+        mode: '0644'
+        owner: postgres
+        group: postgres
 
-- name: Config follow_primary
-  template:
-    src: pgpool2/follow_primary.sh.j2
-    dest: '{{ pgpool_config_dir }}/follow_primary.sh'
-    mode: '0644'
-    owner: postgres
-    group: postgres
+    - name: Config follow_primary script
+      template:
+        src: pgpool2/follow_primary.sh.j2
+        dest: '{{ pgpool_config_dir }}/follow_primary.sh'
+        mode: '0644'
+        owner: postgres
+        group: postgres
 
-- name: Config recovery
-  template:
-    src: pgpool2/recovery_1st_stage.j2
-    dest: '{{ pg_data_dir }}/recovery_1st_stage'
-    mode: '0640'
-    owner: postgres
-    group: postgres
+- block: # Recovery configuration
+    - name: Config recovery_1st_stage script
+      template:
+        src: pgpool2/recovery_1st_stage.j2
+        dest: '{{ pg_data_dir }}/recovery_1st_stage'
+        mode: '0640'
+        owner: postgres
+        group: postgres
 
-- name: Config pgpool_remote_start
-  template:
-    src: pgpool2/pgpool_remote_start.j2
-    dest: '{{ pg_data_dir }}/pgpool_remote_start'
-    mode: '0640'
-    owner: postgres
-    group: postgres
+    - name: Config pgpool_remote_start script
+      template:
+        src: pgpool2/pgpool_remote_start.j2
+        dest: '{{ pg_data_dir }}/pgpool_remote_start'
+        mode: '0640'
+        owner: postgres
+        group: postgres
 
-- block:
     - name: Copy create_pgpool_recovery script
       template:
         src: pgpool2/create_pgpool_recovery.sh.j2

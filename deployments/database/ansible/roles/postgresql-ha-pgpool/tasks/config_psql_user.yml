@@ -1,6 +1,6 @@
 - name: Copy config_psql_user script to master server
   template:
-    src: config_psql_user.sh.j2
+    src: 'postgresql/config_psql_user.sh.j2'
     dest: '{{ pg_config_dir }}/config_psql_user.sh'
     mode: '0644'
     owner: postgres
@@ -24,7 +24,7 @@
 
 - name: Config PostgreSQL pg_hba.conf
   template:
-    src: pg_hba.conf.j2
+    src: 'postgresql/pg_hba.conf.j2'
     dest: '{{ pg_config_dir }}/pg_hba.conf'
     mode: '0640'
     owner: postgres

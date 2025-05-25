@@ -3,10 +3,14 @@
 # tasks file for roles/postgresql-ha-pgpool2
 
 - block:
+    - name: Config ssh between servers
+      include_tasks: setup_ssh.yml
+  tags: [ config-ssh, rc_all ]
+
+- block:
     - name: Install PostgreSQL
       include_tasks: install_postgresql.yml
   tags: [ install, rc_all ]
-
 
 - block:
     - name: Install Pgpool2
@@ -15,7 +19,7 @@
 
 - name: Config PostgreSQL
   template:
-    src: 'postgresql.conf.j2'
+    src: 'postgresql/postgresql.conf.j2'
     dest: '{{ pg_config_dir }}/postgresql.conf'
     mode: '0644'
     owner: postgres
@@ -37,7 +41,7 @@
 
 - name: Config PostgreSQL .pgpass
   template:
-    src: .pgpass.j2
+    src: 'postgresql/.pgpass.j2'
     dest: '{{ postgres_home_dir }}/.pgpass'
     mode: '0600'
     owner: postgres
@@ -51,7 +55,7 @@
 
 - name: Config pgpool_node_id
   template:
-    src: pgpool_node_id.j2
+    src: 'pgpool2/pgpool_node_id.j2'
     dest: '{{ pgpool_config_dir }}/pgpool_node_id'
     mode: '0644'
     owner: root
