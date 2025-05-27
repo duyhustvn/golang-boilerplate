@@ -17,46 +17,48 @@
         group: postgres
 
 - block: # Recovery configuration
-    - name: Config recovery_1st_stage script
-      template:
-        src: pgpool2/recovery_1st_stage.j2
-        dest: '{{ pg_data_dir }}/recovery_1st_stage'
-        mode: '0640'
-        owner: postgres
-        group: postgres
+    - block:
+        - name: Config recovery_1st_stage script
+          template:
+            src: pgpool2/recovery_1st_stage.j2
+            dest: '{{ pg_data_dir }}/recovery_1st_stage'
+            mode: '0640'
+            owner: postgres
+            group: postgres
 
-    - name: Config pgpool_remote_start script
-      template:
-        src: pgpool2/pgpool_remote_start.j2
-        dest: '{{ pg_data_dir }}/pgpool_remote_start'
-        mode: '0640'
-        owner: postgres
-        group: postgres
+        - name: Config pgpool_remote_start script
+          template:
+            src: pgpool2/pgpool_remote_start.j2
+            dest: '{{ pg_data_dir }}/pgpool_remote_start'
+            mode: '0640'
+            owner: postgres
+            group: postgres
 
-    - name: Copy create_pgpool_recovery script
-      template:
-        src: pgpool2/create_pgpool_recovery.sh.j2
-        dest: '{{ pg_data_dir }}/create_pgpool_recovery.sh'
-        mode: '0740'
-        owner: postgres
-        group: postgres
+    - block:
+        - name: Copy create_pgpool_recovery script
+          template:
+            src: pgpool2/create_pgpool_recovery.sh.j2
+            dest: '{{ pg_data_dir }}/create_pgpool_recovery.sh'
+            mode: '0740'
+            owner: postgres
+            group: postgres
 
-    - name: Execute the script create_pgpool_recovery.sh
-      shell: |
-        bash create_pgpool_recovery.sh
-      args:
-        chdir: '{{ pg_data_dir }}'
-      register: result
+        - name: Execute the script create_pgpool_recovery.sh
+          shell: |
+            bash create_pgpool_recovery.sh
+          args:
+            chdir: '{{ pg_data_dir }}'
+          register: result
 
-    - name: Show running script result
-      debug:
-        var: result
+        - name: Show running script result
+          debug:
+            var: result
 
-    - name: Remove running config_psql_user script
-      file:
-        path: '{{ pg_data_dir }}/create_pgpool_recovery.sh'
-        state: absent
-  when: inventory_hostname == 'node-db-01'
+        - name: Remove running create_pgpool_recovery.sh script
+          file:
+            path: '{{ pg_data_dir }}/create_pgpool_recovery.sh'
+            state: absent
+      when: inventory_hostname == 'node-db-01'
 
 - block: # Client authentication Configuration
     - name: Copy pgool_hba.conf to '{{ pgpool_config_dir }}/pool_hba.conf'
