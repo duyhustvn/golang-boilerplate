@@ -17,13 +17,24 @@
       include_tasks: setup_ssh.yml
   tags: [ config_ssh, rc_all ]
 
-- name: Config PostgreSQL
-  template:
-    src: 'postgresql/postgresql.conf.j2'
-    dest: '{{ pg_config_dir }}/postgresql.conf'
-    mode: '0644'
-    owner: postgres
-    group: postgres
+- block:
+    - name: Config PostgreSQL users
+      include_tasks: config_psql_user.yml
+  when: inventory_hostname == "node-db-01"
+  tags: [ config_psql_user, rc_all ]
+
+- block:
+    - name: Config PostgreSQL pg_hba
+      include_tasks: config_psql_auth.yml
+      when: inventory_hostname == "node-db-01"
+
+    - name: Config PostgreSQL
+      template:
+        src: 'postgresql/postgresql.conf.j2'
+        dest: '{{ pg_config_dir }}/postgresql.conf'
+        mode: '0644'
+        owner: postgres
+        group: postgres
   tags: [ config_psql, rc_all ]
 
 - name: Restart PostgreSQL service
@@ -31,12 +42,6 @@
     name: postgresql@{{ postgresql_version }}-main.service
     state: restarted
     enabled: yes
-  tags: [ config_psql, rc_all ]
-
-- block:
-    - name: Config PostgreSQL users
-      include_tasks: config_psql_user.yml
-  when: inventory_hostname == "node-db-01"
   tags: [ config_psql, rc_all ]
 
 - name: Config PostgreSQL .pgpass

@@ -22,16 +22,3 @@
     path: '{{ pg_config_dir }}/config_psql_user.sh'
     state: absent
 
-- name: Config PostgreSQL pg_hba.conf
-  template:
-    src: 'postgresql/pg_hba.conf.j2'
-    dest: '{{ pg_config_dir }}/pg_hba.conf'
-    mode: '0640'
-    owner: postgres
-    group: postgres
-
-- name: Restart PostgreSQL service
-  systemd:
-    name: postgresql@{{ postgresql_version }}-main.service
-    state: restarted
-    enabled: yes
