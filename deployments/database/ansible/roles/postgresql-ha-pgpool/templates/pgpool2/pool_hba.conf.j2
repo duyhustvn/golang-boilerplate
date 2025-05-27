@@ -70,3 +70,11 @@
 # IPv4 local connections:
 host    all         pgpool           samenet          scram-sha-256
 host    all         postgres         samenet          scram-sha-256
+
+{% for ip in pg_allowed_ips %}
+host    all             pgpool             {{ ip }}                 scram-sha-256
+{% endfor %}
+
+{% for ip in pg_allowed_ips %}
+host    all             postgres             {{ ip }}                 scram-sha-256
+{% endfor %}
