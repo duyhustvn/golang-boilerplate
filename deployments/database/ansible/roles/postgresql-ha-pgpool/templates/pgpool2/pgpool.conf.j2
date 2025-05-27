@@ -657,14 +657,14 @@ failback_command = '{{ pgpool_config_dir }}/follow_primary.sh  %d %h %p %D %m %H
 # ONLINE RECOVERY
 #------------------------------------------------------------------------------
 
-#recovery_user = ''
+recovery_user = 'postgres'
                                    # Online recovery user
-#recovery_password = ''
+recovery_password = ''
                                    # Online recovery password
                                    # Leaving it empty will make Pgpool-II to first look for the
                                    # Password in pool_passwd file before using the empty password
 
-#recovery_1st_stage_command = ''
+recovery_1st_stage_command = 'recovery_1st_stage'
                                    # Executes a command in first stage
 #recovery_2nd_stage_command = ''
                                    # Executes a command in second stage

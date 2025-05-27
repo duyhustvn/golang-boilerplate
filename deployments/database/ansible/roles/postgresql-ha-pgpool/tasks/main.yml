@@ -3,11 +3,6 @@
 # tasks file for roles/postgresql-ha-pgpool2
 
 - block:
-    - name: Config ssh between servers
-      include_tasks: setup_ssh.yml
-  tags: [ config-ssh, rc_all ]
-
-- block:
     - name: Install PostgreSQL
       include_tasks: install_postgresql.yml
   tags: [ install, rc_all ]
@@ -17,6 +12,11 @@
       include_tasks: install_pgpool2.yml
   tags: [ install, rc_all ]
 
+- block:
+    - name: Config ssh between servers
+      include_tasks: setup_ssh.yml
+  tags: [ config_ssh, rc_all ]
+
 - name: Config PostgreSQL
   template:
     src: 'postgresql/postgresql.conf.j2'
@@ -24,20 +24,20 @@
     mode: '0644'
     owner: postgres
     group: postgres
-  tags: [ config, rc_all ]
+  tags: [ config_psql, rc_all ]
 
 - name: Restart PostgreSQL service
   systemd:
     name: postgresql@{{ postgresql_version }}-main.service
     state: restarted
     enabled: yes
-  tags: [ config, rc_all ]
+  tags: [ config_psql, rc_all ]
 
 - block:
     - name: Config PostgreSQL users
       include_tasks: config_psql_user.yml
   when: inventory_hostname == "node-db-01"
-  tags: [ node1, rc_all ]
+  tags: [ config_psql, rc_all ]
 
 - name: Config PostgreSQL .pgpass
   template:
@@ -46,12 +46,12 @@
     mode: '0600'
     owner: postgres
     group: postgres
-  tags: [ config, rc_all ]
+  tags: [ config_psql, rc_all ]
 
-- block:
+- block: # PCP connection authentication
     - name: Config PCP connection authentication
       include_tasks: config_pcp_connection_authen.yml
-  tags: [ config, rc_all ]
+  tags: [ config_pgpool, rc_all ]
 
 - name: Config pgpool_node_id
   template:
@@ -60,10 +60,9 @@
     mode: '0644'
     owner: root
     group: root
-  tags: [ config, rc_all ]
-
+  tags: [ config_pgpool, rc_all ]
 
 - block:
     - name: Config pgpool
       include_tasks: config_pgpool.yml
-  tags: [ config, rc_all ]
+  tags: [ config_pgpool, rc_all ]
