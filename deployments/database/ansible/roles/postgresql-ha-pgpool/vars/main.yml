@@ -2,7 +2,6 @@
 ---
 # vars file for roles/postgresql-ha-pgpool2
 
-postgresql_version: 17
-pgpool_version: 4.6
+
 
 ssh_key_file: id_rsa_pgpool

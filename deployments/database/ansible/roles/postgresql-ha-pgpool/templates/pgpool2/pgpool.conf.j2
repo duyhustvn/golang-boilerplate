@@ -83,7 +83,7 @@ pcp_port = 9898
 # - Backend Connection Settings -
 
 {% for host in groups['all'] %}
-backend_hostname{{ loop.index0 }} = '{{ hostvars[host]['node_name'] }}'
+backend_hostname{{ loop.index0 }} = '{{ hostvars[host]['node_ip'] }}'
                                    # Host name or IP address to connect to for backend {{ loop.index0 }}
 backend_port{{ loop.index0 }} = 5432
                                    # Port number for backend {{ loop.index0 }}
@@ -236,18 +236,18 @@ log_destination = 'syslog'
 
 #log_line_prefix = '%m: %a pid %p: '   # printf-style string to output at beginning of each log line.
 
-#log_connections = off
+log_connections = on
                                    # Log connections
 #log_disconnections = off
                                    # Log disconnections
 log_pcp_processes = on
                                    # Log PCP Processes
-#log_hostname = off
+log_hostname = on
                                    # Hostname will be shown in ps status
                                    # and in logs if connections are logged
-#log_statement = off
+log_statement = on
                                    # Log all statements
-#log_per_node_statement = off
+log_per_node_statement = on
                                    # Log all statements
                                    # with node and backend information
 #notice_per_node_statement = off
@@ -301,7 +301,7 @@ syslog_ident = 'pgpool'
                                         #   panic
 
 # This is used when logging to stderr:
-#logging_collector = off
+# logging_collector = on
                                         # Enable capturing of stderr
                                         # into log files.
                                         # (change requires restart)
@@ -712,7 +712,7 @@ use_watchdog = on
 # - Watchdog communication Settings -
 
 {% for host in groups['all'] %}
-hostname{{ loop.index0 }} = '{{ hostvars[host]['node_name'] }}'
+hostname{{ loop.index0 }} = '{{ hostvars[host]['node_ip'] }}'
                                     # Host name or IP address of pgpool node
                                     # for watchdog connection
                                     # (change requires restart)
@@ -856,7 +856,7 @@ wd_interval = 10
 # -- heartbeat mode --
 
 {% for host in groups['all'] %}
-heartbeat_hostname{{ loop.index0 }} = '{{ hostvars[host]['node_name'] }}'
+heartbeat_hostname{{ loop.index0 }} = '{{ hostvars[host]['node_ip'] }}'
                                     # Host name or IP address used
                                     # for sending heartbeat signal.
                                     # (change requires restart)
