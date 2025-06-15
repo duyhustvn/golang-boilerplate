@@ -22,7 +22,7 @@
           template:
             src: pgpool2/recovery_1st_stage.j2
             dest: '{{ pg_data_dir }}/recovery_1st_stage'
-            mode: '0640'
+            mode: '0740'
             owner: postgres
             group: postgres
 
@@ -30,7 +30,7 @@
           template:
             src: pgpool2/pgpool_remote_start.j2
             dest: '{{ pg_data_dir }}/pgpool_remote_start'
-            mode: '0640'
+            mode: '0740'
             owner: postgres
             group: postgres
 

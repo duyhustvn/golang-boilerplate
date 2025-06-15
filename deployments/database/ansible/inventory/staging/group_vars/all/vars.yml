@@ -17,3 +17,5 @@ if_cmd_path: /sbin
 
 pg_allowed_ips:
   - 192.168.56.0/24
+
+proxy:
