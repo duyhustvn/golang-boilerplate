@@ -83,7 +83,7 @@
 
     - name: Update pool_passwd with postgres user
       shell: |
-        sudo pg_enc -m -k {{ postgres_home_dir }}/.pgpoolkey -u postgres {{ pgpool_user_pass }}
+        sudo pg_enc -m -k {{ postgres_home_dir }}/.pgpoolkey -u postgres {{ postgres_user_pass }}
 
 - block: # Watch dog
   - name: Copy escalation.sh
