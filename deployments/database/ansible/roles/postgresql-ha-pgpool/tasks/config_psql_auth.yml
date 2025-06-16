@@ -5,9 +5,3 @@
     mode: '0640'
     owner: postgres
     group: postgres
-
-- name: Restart PostgreSQL service
-  systemd:
-    name: postgresql@{{ postgresql_version }}-main.service
-    state: restarted
-    enabled: yes

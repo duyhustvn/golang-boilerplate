@@ -26,7 +26,6 @@
 - block:
     - name: Config PostgreSQL pg_hba
       include_tasks: config_psql_auth.yml
-      when: inventory_hostname == "node-db-01"
 
     - name: Config PostgreSQL
       template:
