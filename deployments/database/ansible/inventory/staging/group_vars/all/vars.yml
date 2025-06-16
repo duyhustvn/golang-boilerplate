@@ -5,6 +5,7 @@ postgresql_version: 16
 pg_data_dir: /var/lib/postgresql/16/main
 pg_config_dir: /etc/postgresql/16/main
 postgres_home_dir: /var/lib/postgresql
+pg_lib_dir: /usr/lib/postgresql/16
 pgpool_config_dir: /etc/pgpool2
 pgpool_path: /usr/sbin
 
