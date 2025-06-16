@@ -128,6 +128,9 @@ host    all             all             ::1/128                 scram-sha-256
 host    replication     all             127.0.0.1/32            scram-sha-256
 host    replication     all             ::1/128                 scram-sha-256
 
+# "local" is for Unix-domain socket connections only
+local   all             all                     scram-sha-256
+
 {% for ip in pg_allowed_ips %}
 host    all             pgpool          {{ ip }}                scram-sha-256
 {% endfor %}
