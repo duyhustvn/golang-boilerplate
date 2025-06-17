@@ -19,4 +19,4 @@ if_cmd_path: /sbin
 pg_allowed_ips:
   - 192.168.56.0/24
 
-proxy:
+proxy: "" # if not set proxy, keep it empty with quote, don't remove the quote

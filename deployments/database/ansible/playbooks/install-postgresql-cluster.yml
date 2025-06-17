@@ -18,5 +18,17 @@
         msg: "postgresql version: {{ postgresql_version }}, vip: {{ vip }}"
       tags: [ debug ]
 
+    - name: Debug
+      debug:
+        msg: "Proxy is SET to '{{ proxy }}'"
+      when: (proxy | default('')) | trim != ""
+
+
+    - name: Debug
+      debug:
+        msg: "Proxy is not SET"
+      when: (proxy | default('')) | trim == ""
+
+
   roles:
     - postgresql-ha-pgpool

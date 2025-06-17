@@ -19,9 +19,6 @@
     url: "{{ pgdg_key_url }}"
     dest: "{{ pgdg_key_dest }}"
     mode: '0644'
-  # environment:
-  #   http_proxy: "{{ proxy }}"
-  #   https_proxy: "{{ proxy }}"
   environment: "{{ (proxy | default('') | trim) | ternary({'http_proxy': proxy, 'https_proxy': proxy}, {}) }}"
 
 - name: Add PostgreSQL APT repository
