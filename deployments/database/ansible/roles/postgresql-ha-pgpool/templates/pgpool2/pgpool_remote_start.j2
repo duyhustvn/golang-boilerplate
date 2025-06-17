@@ -22,7 +22,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Command to start PostgreSQL
-START_CMD="sudo systemctl restart postgresql@{{ postgresql_version }}-main.service"
+START_CMD="sudo systemctl start postgresql@{{ postgresql_version }}-main.service"
 
 ## Start Standby node
 ## ssh -T ${SSH_OPTIONS} ${POSTGRESQL_STARTUP_USER}@${DEST_NODE_HOST} "

@@ -55,6 +55,8 @@ ssh -T ${SSH_OPTIONS} ${POSTGRESQL_STARTUP_USER}@$DEST_NODE_HOST "
 
     set -o errexit
 
+    sudo systemctl stop postgresql@{{ postgresql_version }}-main.service
+
     [ -d \"${DEST_NODE_PGDATA}\" ] && rm -rf ${DEST_NODE_PGDATA}
 
     ${PGHOME}/bin/pg_basebackup -h $PRIMARY_NODE_HOST -U $REPLUSER -p $PRIMARY_NODE_PORT -D $DEST_NODE_PGDATA -X stream
