@@ -98,7 +98,7 @@
     template:
       src:  pgpool2/escalation.sh.j2
       dest: '{{ pgpool_config_dir }}/escaltion.sh'
-      mode: '0600'
+      mode: '0700'
       owner: postgres
       group: postgres
   - name: Allow postgres user run ip, arping using sudo without password
