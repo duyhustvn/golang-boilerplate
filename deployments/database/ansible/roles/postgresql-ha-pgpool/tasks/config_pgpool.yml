@@ -4,7 +4,7 @@
       template:
         src: pgpool2/failover.sh.j2
         dest: '{{ pgpool_config_dir }}/failover.sh'
-        mode: '0644'
+        mode: '0744'
         owner: postgres
         group: postgres
 
@@ -12,7 +12,7 @@
       template:
         src: pgpool2/follow_primary.sh.j2
         dest: '{{ pgpool_config_dir }}/follow_primary.sh'
-        mode: '0644'
+        mode: '0744'
         owner: postgres
         group: postgres
 
