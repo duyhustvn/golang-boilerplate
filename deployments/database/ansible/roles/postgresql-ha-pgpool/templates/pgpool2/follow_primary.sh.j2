@@ -105,7 +105,7 @@ EOT
         echo \"standby_mode = 'on'\" >> ${RECOVERYCONF}
     fi
 
-    sudo systemctl stop postgresql@{{ postgresql_version }}-main.service
+    sudo systemctl start postgresql@{{ postgresql_version }}-main.service
     # ${PGHOME}/bin/pg_ctl -l /dev/null -w -D ${NODE_PGDATA} start
 
 "
