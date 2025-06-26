@@ -10,6 +10,7 @@ typedef struct Node_ {
 } Node;
 
 Node *create_node(void *data, char *errstr);
+void free_node(Node *node);
 
 /*
  * enqueue into rear 
@@ -29,5 +30,6 @@ Queue *init_queue(char *errstr);
 bool enqueue(Queue *q, void *data, char *errstr);
 void *dequeue(Queue *q, char *errstr);
 bool is_empty(Queue *q);
+void free_queue(Queue *q);
 
 #endif // QUEUE_H_

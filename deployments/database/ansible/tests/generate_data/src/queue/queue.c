@@ -1,6 +1,7 @@
 #include "queue.h"
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 Node *create_node(void *data, char *errstr) {
@@ -13,6 +14,15 @@ Node *create_node(void *data, char *errstr) {
     node->data = data;
     node->next = NULL;
     return node;
+};
+
+void free_node(Node *node) {
+    if (!node) {
+        return;
+    }
+
+    free(node->data);
+    free(node);
 };
 
 Queue *init_queue(char *errstr) {
@@ -72,4 +82,18 @@ void *dequeue(Queue *q, char *errstr) {
     q->length--;
     pthread_mutex_unlock(&q->mutex);
     return node;
+};
+
+
+void free_queue(Queue *q) {
+    if (!q) {
+        return;
+    }
+
+    char errstr[1024];
+    while (q->length > 0) {
+        Node *node = dequeue(q, errstr);
+        free_node(node);
+    }
+    free(q);
 };

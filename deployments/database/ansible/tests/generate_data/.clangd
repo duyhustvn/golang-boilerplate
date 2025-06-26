@@ -1,0 +1,9 @@
+CompileFlags:
+  Add:
+    - -Isrc
+    - -Ibuild/vendor/unity/src
+    - -Ibuild/vendor/cmock/src
+    - -DTEST
+    - -DUNITY_EXCLUDE_FLOAT
+  Remove:
+    - -W*
