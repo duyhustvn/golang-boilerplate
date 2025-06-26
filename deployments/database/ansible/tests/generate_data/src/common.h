@@ -5,5 +5,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <pthread.h>
 
 #endif // COMMON_H

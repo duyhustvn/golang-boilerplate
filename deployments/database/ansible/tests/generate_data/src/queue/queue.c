@@ -1,8 +1,4 @@
 #include "queue.h"
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-
 
 Node *create_node(void *data, char *errstr) {
     Node *node = (Node *) malloc(sizeof(Node));
@@ -33,6 +29,8 @@ Queue *init_queue(char *errstr) {
     }
 
     q->length = 0;
+    q->front = NULL;
+    q->rear = NULL;
 
     pthread_mutex_init(&q->mutex, NULL);
     return q;
