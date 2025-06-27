@@ -1,3 +1,0 @@
-#!/bin/bash
-
-PGPASSWORD='{{ postgres_user_pass }}' psql -U postgres -h localhost template1 -c "CREATE EXTENSION IF NOT EXISTS pgpool_recovery"

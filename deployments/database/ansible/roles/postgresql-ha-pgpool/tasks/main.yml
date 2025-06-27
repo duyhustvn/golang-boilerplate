@@ -4,71 +4,27 @@
 
 - block:
     - name: Install PostgreSQL
-      include_tasks: install_postgresql.yml
-  tags: [ install, rc_all ]
+      include_tasks: install/install_postgresql.yml
+  tags: [ install_postgresql, rc_all ]
 
 - block:
     - name: Install Pgpool2
-      include_tasks: install_pgpool2.yml
-  tags: [ install, rc_all ]
+      include_tasks: install/install_pgpool2.yml
+  tags: [ install_pgpool2, rc_all ]
 
 - block:
     - name: Config ssh between servers
-      include_tasks: setup_ssh.yml
+      include_tasks: ssh/setup_ssh.yml
   tags: [ config_ssh, rc_all ]
 
 - block:
-    - name: Config PostgreSQL users
-      include_tasks: config_psql_user.yml
-  when: inventory_hostname == "node-db-01"
-  tags: [ config_psql_user, rc_all ]
-
-- block:
-    - name: Config PostgreSQL pg_hba
-      include_tasks: config_psql_auth.yml
-
-    - name: Config PostgreSQL
-      template:
-        src: 'postgresql/postgresql.conf.j2'
-        dest: '{{ pg_config_dir }}/postgresql.conf'
-        mode: '0644'
-        owner: postgres
-        group: postgres
+    - name: Config PostgreSQL 
+      include_tasks: psql/config_psql.yml
   tags: [ config_psql, rc_all ]
-
-- name: Restart PostgreSQL service
-  systemd:
-    name: postgresql@{{ postgresql_version }}-main.service
-    state: restarted
-    enabled: yes
-  tags: [ config_psql, rc_all ]
-
-- name: Config PostgreSQL .pgpass
-  template:
-    src: 'postgresql/.pgpass.j2'
-    dest: '{{ postgres_home_dir }}/.pgpass'
-    mode: '0600'
-    owner: postgres
-    group: postgres
-  tags: [ config_psql, rc_all ]
-
-- block: # PCP connection authentication
-    - name: Config PCP connection authentication
-      include_tasks: config_pcp_connection_authen.yml
-  tags: [ config_pgpool, rc_all ]
-
-- name: Config pgpool_node_id
-  template:
-    src: 'pgpool2/pgpool_node_id.j2'
-    dest: '{{ pgpool_config_dir }}/pgpool_node_id'
-    mode: '0644'
-    owner: root
-    group: root
-  tags: [ config_pgpool, rc_all ]
 
 - block:
     - name: Config pgpool
-      include_tasks: config_pgpool.yml
+      include_tasks: pgpool2/config_pgpool.yml
   tags: [ config_pgpool, rc_all ]
 
 # - block:
