@@ -1,0 +1,3 @@
+- name: Create PostgreSQL extension
+  shell: |
+    PGPASSWORD='{{ postgres_user_pass }}' psql -U postgres -d postgres -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements"
