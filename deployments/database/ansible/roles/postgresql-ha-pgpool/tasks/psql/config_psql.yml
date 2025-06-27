@@ -29,7 +29,7 @@
 - name: Create .pgpass in postgres user's home for streaming replication and online recovery, and execute pg_rewind using postgresql
   template:
     src: 'postgresql/.pgpass.j2'
-    dest: '{{ postgres_home_dir }}/.pgpass'
+    dest: '{{ pg_home_dir }}/.pgpass'
     mode: '0600'
     owner: postgres
     group: postgres

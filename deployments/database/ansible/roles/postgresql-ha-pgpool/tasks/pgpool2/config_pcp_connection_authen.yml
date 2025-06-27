@@ -33,7 +33,7 @@
 - name: Create .pcppass in postgres user's home directory
   template:
     src: 'pgpool2/.pcppass.j2'
-    dest: '{{ postgres_home_dir }}/.pcppass'
+    dest: '{{ pg_home_dir }}/.pcppass'
     mode: '0600'
     owner: postgres
     group: postgres

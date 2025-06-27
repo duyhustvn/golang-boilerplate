@@ -1,7 +1,7 @@
 ---
-- name: Ensure '{{ postgres_home_dir }}/.ssh' exists for postgres
+- name: Ensure '{{ pg_home_dir }}/.ssh' exists for postgres
   file:
-    path: '{{ postgres_home_dir }}/.ssh'
+    path: '{{ pg_home_dir }}/.ssh'
     state: directory
     owner: postgres
     group: postgres
@@ -9,7 +9,7 @@
 
 - name: Generate an RSA keypair for pgpool
   openssh_keypair:
-    path: '{{ postgres_home_dir }}/.ssh/{{ ssh_key_file }}'
+    path: '{{ pg_home_dir }}/.ssh/{{ ssh_key_file }}'
     type: rsa
     size: 2048
     owner: postgres
@@ -21,7 +21,7 @@
 
 - name: Slurp the public key into a variable
   slurp:
-    path: "{{ postgres_home_dir }}/.ssh/{{ ssh_key_file }}.pub"
+    path: "{{ pg_home_dir }}/.ssh/{{ ssh_key_file }}.pub"
   register: slurped
 
 - name: Store decoded public key in hostvars
@@ -30,7 +30,7 @@
 
 - name: Ensure authorized_keys exists
   file:
-    path: "{{ postgres_home_dir }}/.ssh/authorized_keys"
+    path: "{{ pg_home_dir }}/.ssh/authorized_keys"
     state: touch
     owner: postgres
     group: postgres
