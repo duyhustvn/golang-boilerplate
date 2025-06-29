@@ -63,7 +63,7 @@ bool enqueue(Queue *q, void *data, char *errstr) {
 };
 
 
-void *dequeue(Queue *q, char *errstr) {
+Node *dequeue(Queue *q, char *errstr) {
     if (is_empty(q)) {
         return NULL;
     }
@@ -76,7 +76,7 @@ void *dequeue(Queue *q, char *errstr) {
     } else {
         q->front = q->front->next;
     }
-
+    node->next = NULL;
     q->length--;
     pthread_mutex_unlock(&q->mutex);
     return node;

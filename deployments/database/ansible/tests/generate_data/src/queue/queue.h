@@ -28,7 +28,7 @@ typedef struct Queue_ {
 
 Queue *init_queue(char *errstr);
 bool enqueue(Queue *q, void *data, char *errstr);
-void *dequeue(Queue *q, char *errstr);
+Node *dequeue(Queue *q, char *errstr);
 bool is_empty(Queue *q);
 void free_queue(Queue *q);
 
