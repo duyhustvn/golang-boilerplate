@@ -6,7 +6,7 @@ void tearDown(void) {}
 
 void test_init_queue(void) {
     char errstr[1024];
-    Queue *q = init_queue(errstr); 
+    Queue *q = init_queue(errstr, sizeof(errstr)); 
 
     TEST_ASSERT_NOT_NULL(q);
     TEST_ASSERT_EQUAL_INT(q->length, 0);
@@ -18,7 +18,7 @@ void test_init_queue(void) {
 
 void test_enqueue(void) {
     char errstr[1024];
-    Queue *q = init_queue(errstr);
+    Queue *q = init_queue(errstr, sizeof(errstr)); 
 
     TEST_ASSERT_NOT_NULL(q);
     TEST_ASSERT_EQUAL_INT(q->length, 0);
@@ -61,7 +61,7 @@ void test_enqueue(void) {
 
 void test_dequeue(void) {
     char errstr[1024];
-    Queue *q = init_queue(errstr);
+    Queue *q = init_queue(errstr, sizeof(errstr)); 
 
     TEST_ASSERT_NOT_NULL(q);
     TEST_ASSERT_EQUAL_INT(q->length, 0);

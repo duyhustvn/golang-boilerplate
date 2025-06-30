@@ -9,7 +9,7 @@ typedef struct Node_ {
     struct Node_ *next;
 } Node;
 
-Node *create_node(void *data, char *errstr);
+Node *create_node(void *data, char *errstr, size_t err_msg_size);
 void free_node(Node *node);
 
 /*
@@ -26,7 +26,7 @@ typedef struct Queue_ {
     pthread_mutex_t mutex;
 } Queue;
 
-Queue *init_queue(char *errstr);
+Queue *init_queue(char *errstr, size_t err_msg_size);
 bool enqueue(Queue *q, void *data, char *errstr);
 Node *dequeue(Queue *q, char *errstr, size_t err_msg_size);
 bool is_empty(Queue *q);

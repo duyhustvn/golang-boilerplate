@@ -12,7 +12,7 @@ int main() {
     http_client_init();
 
     char errstr[1024];
-    Queue *q = init_queue(errstr);
+    Queue *q = init_queue(errstr, sizeof(errstr));
     if (!q) {
         printf("%s\n", errstr);
     }

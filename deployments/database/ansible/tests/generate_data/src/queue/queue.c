@@ -1,9 +1,9 @@
 #include "queue.h"
 
-Node *create_node(void *data, char *errstr) {
+Node *create_node(void *data, char *errstr, size_t err_msg_size) {
     Node *node = (Node *) malloc(sizeof(Node));
     if (!node) {
-        errstr = "Failed to malloc data for node";
+        snprintf(errstr, err_msg_size, "Failed to create queue");
         return NULL;
     }
 
@@ -21,10 +21,10 @@ void free_node(Node *node) {
     free(node);
 };
 
-Queue *init_queue(char *errstr) {
+Queue *init_queue(char *errstr, size_t err_msg_size) {
     Queue *q = (Queue *) malloc(sizeof(Queue));
     if (!q) {
-        errstr = "Failed to malloc data for queue";
+        snprintf(errstr, err_msg_size, "Failed to create queue");
         return NULL;
     }
 
@@ -43,7 +43,7 @@ bool is_empty(Queue *q) {
 
 
 bool enqueue(Queue *q, void *data, char *errstr) {
-    Node *node = create_node(data, errstr);
+    Node *node = create_node(data, errstr, sizeof(errstr));
     if (!node) {
         return false;
     }
