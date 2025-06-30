@@ -62,13 +62,15 @@ bool enqueue(Queue *q, void *data, char *errstr) {
     return true;
 };
 
+Node *dequeue(Queue *q, char *errstr, size_t err_msg_size) {
+    pthread_mutex_lock(&q->mutex);
 
-Node *dequeue(Queue *q, char *errstr) {
     if (is_empty(q)) {
+        snprintf(errstr, err_msg_size, "Queue is empty");
+        pthread_mutex_unlock(&q->mutex);
         return NULL;
     }
-    
-    pthread_mutex_lock(&q->mutex);
+
     Node *node = q->front;
     if (q->length == 1) {
         q->front = NULL;
@@ -90,7 +92,7 @@ void free_queue(Queue *q) {
 
     char errstr[1024];
     while (q->length > 0) {
-        Node *node = dequeue(q, errstr);
+        Node *node = dequeue(q, errstr, sizeof(errstr));
         free_node(node);
     }
     free(q);

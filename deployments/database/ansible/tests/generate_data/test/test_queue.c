@@ -87,16 +87,16 @@ void test_dequeue(void) {
     result = enqueue(q, i, errstr);
     TEST_ASSERT_EQUAL_INT(q->length, 3);
 
-    node = dequeue(q, errstr);
+    node = dequeue(q, errstr, sizeof(errstr));
     TEST_ASSERT_EQUAL_INT(q->length, 2);
     data = (int *) node->data;
     TEST_ASSERT_EQUAL_INT(*data, 1);
 
-    node = dequeue(q, errstr);
+    node = dequeue(q, errstr, sizeof(errstr));
     data = (int *) node->data;
     TEST_ASSERT_EQUAL_INT(*data, 2);
 
-    node = dequeue(q, errstr);
+    node = dequeue(q, errstr, sizeof(errstr));
     data = (int *) node->data;
     TEST_ASSERT_EQUAL_INT(*data, 3);
 }

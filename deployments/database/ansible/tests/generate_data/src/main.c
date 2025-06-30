@@ -3,7 +3,6 @@
 #include "http/http_client.h"
 #include "api_caller/signup_api.h"
 #include "queue/queue.h"
-#include <stdio.h>
 
 #define NUM_THREADS 8
 
@@ -19,7 +18,7 @@ int main() {
     }
 
     int *v;
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1000; i++) {
         v = malloc(sizeof(int));
         *v = i;
         bool ok = enqueue(q, v, errstr);
@@ -29,17 +28,36 @@ int main() {
         }
     }
 
+    printf("queue length: %d\n", q->length);
+
     if (is_empty(q)) {
         return 0;
     }
 
-    sign_up_thread_vars thread_vars = {
-        .q = q,
-    };
-
+    
+    int rc;
     pthread_t threads[NUM_THREADS];
+    sign_up_thread_vars thread_vars[NUM_THREADS];
+
     for (int i = 0; i < NUM_THREADS; i++) {
-        pthread_create(&threads[i], NULL, call_signup_api_thread, (void *)&thread_vars);
+        thread_vars[i].threadId = i;
+        thread_vars[i].q = q;
+
+        rc = pthread_create(&threads[i], NULL, call_signup_api_thread, (void *)&thread_vars[i]);
+        if (rc) {
+            printf("Error in creating new thread");
+            return 0;
+        }
+    }
+
+    /* Wait for all threads to finish */
+    void *status;
+    for (int i = 0; i < NUM_THREADS; i++) {
+        rc = pthread_join(threads[i], &status);
+        if (rc) {
+            printf("Error in joinning the thread");
+            return 0;
+        }
     }
      
     // Cleanup client (call once at program end)

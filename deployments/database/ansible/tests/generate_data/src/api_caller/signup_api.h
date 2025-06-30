@@ -5,6 +5,7 @@
 #include "../queue/queue.h"
 
 typedef struct sign_up_thread_vars_ {
+    int threadId;
     Queue *q;   
 } sign_up_thread_vars;
 
