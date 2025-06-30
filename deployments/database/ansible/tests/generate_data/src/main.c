@@ -1,46 +1,45 @@
-#include "http/http_client.h"
-#include "signup/signup.h"
+#include "common.h"
 
+#include "http/http_client.h"
+#include "api_caller/signup_api.h"
+#include "queue/queue.h"
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>  
-#include <pthread.h>
 
 #define NUM_THREADS 8
 
-void *call_api(void* threadArg) {
-
-}
 
 int main() {
     // Initialize client (call once at program start)
     http_client_init();
 
-    char err[1024];
+    char errstr[1024];
+    Queue *q = init_queue(errstr);
+    if (!q) {
+        printf("%s\n", errstr);
+    }
+
+    int *v;
+    for (int i = 0; i < 100; i++) {
+        v = malloc(sizeof(int));
+        *v = i;
+        bool ok = enqueue(q, v, errstr);
+        if (!ok) {
+            printf("%s\n", errstr);
+            continue;
+        }
+    }
+
+    if (is_empty(q)) {
+        return 0;
+    }
+
+    sign_up_thread_vars thread_vars = {
+        .q = q,
+    };
+
     pthread_t threads[NUM_THREADS];
-
-    // bool ok = call_signup_api(body, err);
-    // if (!ok) {
-    //     printf("%s \n", err);
-    //     return EXIT_FAILURE;
-    // }
-    
-    
-
     for (int i = 0; i < NUM_THREADS; i++) {
-        char username[15];
-
-        sprintf(username, "%04d", i);
-        printf("username: %s \n", username);
-
-        signup_request_body body = {
-              .application = "application_bench_psql_cluster",
-              .organization = "organization_bench_psql_cluster",
-              .username = "user_0.000.000.004",
-              .password = "randompasswd"
-          };
-
-        pthread_create(threads[i], NULL, );
+        pthread_create(&threads[i], NULL, call_signup_api_thread, (void *)&thread_vars);
     }
      
     // Cleanup client (call once at program end)

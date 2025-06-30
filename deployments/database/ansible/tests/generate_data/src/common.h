@@ -6,5 +6,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <pthread.h>
+#include <unistd.h>  
 
 #endif // COMMON_H
