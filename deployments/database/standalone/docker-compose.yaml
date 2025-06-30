@@ -6,13 +6,10 @@ services:
     restart: always
     container_name: postgres16
     environment:
-      - POSTGRES_DB=golang_boilerplate
-      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=changeme
-    expose:
-      - 5432
+      - POSTGRESQL_SHARED_PRELOAD_LIBRARIES=pg_stat_statements
     ports:
-      - 5432:5432
+      - 5434:5432
     volumes:
       - postgresql16_data:/var/lib/postgresql/data
 
