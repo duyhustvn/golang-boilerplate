@@ -63,21 +63,21 @@ void *call_signup_api_thread(void *thread_args) {
         int *i = (int *) node->data;
 
         char username[15];     
-        sprintf(username, "%04d", *i);
+        sprintf(username, "user_%04d", *i);
         printf("threadID: %d, username: %s\n", thread_vars->threadId, username);
 
         signup_request_body body = {
             .application = "application_bench_psql_cluster",
             .organization = "organization_bench_psql_cluster",
-            .username = "user_0.000.000.004",
+            .username = username,
             .password = "randompasswd"
         };
 
-        // bool ok = call_signup_api(body, errstr);
-        // if (!ok) {
-        //     printf("[call_signup_api_thread] %s", errstr);
-        //     pthread_exit(NULL);
-        // }
+        bool ok = call_signup_api(body, errstr);
+        if (!ok) {
+            printf("[call_signup_api_thread] %s", errstr);
+            pthread_exit(NULL);
+        }
     }
 
 
