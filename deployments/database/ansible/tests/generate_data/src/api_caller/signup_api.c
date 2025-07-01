@@ -63,7 +63,7 @@ void *call_signup_api_thread(void *thread_args) {
         int *i = (int *) node->data;
 
         char username[20];     
-        sprintf(username, "user_%013d", *i); // %0 will automatically append 0 to the beginning of the string if it is shorter than 13
+        snprintf(username, sizeof(username), "user_%013d", *i); // %0 will automatically append 0 to the beginning of the string if it is shorter than 13
         printf("threadID: %d, username: %s\n", thread_vars->threadId, username);
 
         signup_request_body body = {
