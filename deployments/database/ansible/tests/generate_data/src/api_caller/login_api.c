@@ -9,6 +9,7 @@ char *login_request_body_to_json_string(login_request_body body) {
     cJSON_AddStringToObject(data, "client_id", body.client_id);
     cJSON_AddStringToObject(data, "username", body.username);
     cJSON_AddStringToObject(data, "password", body.password);
+    cJSON_AddStringToObject(data, "country_code", body.country_code);
 
     char *json_string = cJSON_Print(data);
     cJSON_Delete(data);
@@ -71,7 +72,8 @@ void *call_login_api_thread(void *thread_args) {
             .grant_type = "password",
             .client_id = "6c875db314d6760e3b69",
             .username = username,
-            .password = "randompasswd"
+            .password = "randompasswd",
+            .country_code = "VN",
         };
 
         bool ok = call_login_api(body, errstr, sizeof(errstr));

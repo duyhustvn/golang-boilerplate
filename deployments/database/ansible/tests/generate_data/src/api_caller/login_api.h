@@ -27,6 +27,7 @@ typedef struct login_request_body_ {
    char* client_id;
    char* username;
    char* password;
+   char *country_code;
 } login_request_body;
 
 
