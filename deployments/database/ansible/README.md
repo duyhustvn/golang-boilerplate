@@ -23,11 +23,11 @@ Please read about [tags](https://docs.ansible.com/ansible/latest/playbook_guide/
 
 - Run all tags the playbook
 ``` sh
-ansible-playbook --vault-password-file=.ansible-vault-secret-devlocal -i inventory/devlocal/hosts.yml playbooks/install-postgresql-cluster.yml --tags rc_all
+ansible-playbook --vault-password-file=.ansible-vault-secret-devlocal -i inventory/devlocal/ubuntu/hosts.yml playbooks/install-postgresql-cluster.yml --tags rc_all
 ```
 
 - Run specific tags the playbook
 ``` sh
-ansible-playbook --vault-password-file=.ansible-vault-secret-devlocal -i inventory/devlocal/hosts.yml playbooks/install-postgresql-cluster.yml --tags config_psql,config_pgpool
+ansible-playbook --vault-password-file=.ansible-vault-secret-devlocal -i inventory/devlocal/ubuntu/hosts.yml playbooks/install-postgresql-cluster.yml --tags config_psql,config_pgpool
 ```
 Change the tags to the tags you want to run
