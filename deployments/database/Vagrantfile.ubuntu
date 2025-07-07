@@ -1,9 +1,9 @@
 Vagrant.configure("2") do |config|
     # Define VM configurations
     vms = [
-      { gui_display_name: "db_01", name: "db_1", hostname: "node-db-01", ip: "192.168.56.111" },
-      { gui_display_name: "db_02", name: "db_2", hostname: "node-db-02", ip: "192.168.56.112" },
-      { gui_display_name: "db_03", name: "db_3", hostname: "node-db-03", ip: "192.168.56.113" }
+      { gui_display_name: "db_ubuntu_01", name: "db_1", hostname: "node-db-01", ip: "192.168.56.111" },
+      { gui_display_name: "db_ubuntu_02", name: "db_2", hostname: "node-db-02", ip: "192.168.56.112" },
+      { gui_display_name: "db_ubuntu_03", name: "db_3", hostname: "node-db-03", ip: "192.168.56.113" }
     ]
   
     vms.each do |vm|

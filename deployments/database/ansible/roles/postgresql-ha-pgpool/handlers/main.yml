@@ -7,3 +7,22 @@
   systemd:
     name: rsyslog
     state: restarted
+
+- name: Clean DNF cache
+  command:
+    cmd: dnf clean all
+  changed_when: false
+
+- name: Restart PostgreSQL
+  block:
+    - name: Restart PostgreSQL Debian
+      become: true
+      systemd:
+        name: postgresql@{{ postgresql_version }}-main.service
+        state: restarted
+      when: ansible_os_family == "Debian"
+
+    - name: Restart PostgreSQL RedHat
+      shell: |
+        sudo -i -u postgres bash -c "{{ pg_lib_dir }}/bin/pg_ctl restart"
+      when: ansible_os_family == "RedHat"

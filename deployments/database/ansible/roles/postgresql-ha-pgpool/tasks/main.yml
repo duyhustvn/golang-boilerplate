@@ -4,13 +4,29 @@
 
 - block:
     - name: Install PostgreSQL
-      include_tasks: install/install_postgresql.yml
+      include_tasks: install/install_postgresql_debian.yml
+      when: ansible_os_family == "Debian"
+
+    - name: Install PostgreSQL
+      include_tasks: install/install_postgresql_redhat.yml
+      when: ansible_os_family == "RedHat"
   tags: [ install_postgresql, rc_all ]
 
 - block:
     - name: Install Pgpool2
-      include_tasks: install/install_pgpool2.yml
+      include_tasks: install/install_pgpool2_debian.yml
+      when: ansible_os_family == "Debian"
+
+    - name: Install Pgpool2
+      include_tasks: install/install_pgpool2_redhat.yml
+      when: ansible_os_family == "RedHat"
   tags: [ install_pgpool2, rc_all ]
+
+- block:
+    - name: Init PostgreSQL
+      include_tasks: psql/init_psql.yml
+      when: ansible_os_family == "RedHat" and inventory_hostname == "node-db-01"
+  tags: [ init_psql, rc_all ]
 
 - block:
     - name: Config ssh between servers
