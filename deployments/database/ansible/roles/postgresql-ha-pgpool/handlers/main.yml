@@ -23,6 +23,21 @@
   when: ansible_os_family == "RedHat"
   listen: Restart PostgreSQL
 
+- name: Restart PgPool Debian
+  become: true
+  systemd:
+    name: pgpool2.service
+    state: restarted
+  when: ansible_os_family == "Debian"
+  listen: Restart PgPool
+
+- name: Restart PgPool RedHat
+  become: true
+  shell:
+    cmd: "sudo systemctl restart pgpool.service"
+  when: ansible_os_family == "RedHat"
+  listen: Restart PgPool
+
 - name: Clean DNF cache
   command:
     cmd: dnf clean all
