@@ -16,4 +16,8 @@
     name: postgresql{{ postgresql_version }}-server
     state: present
 
+- name: Install contrib package # pg_stat_statements
+  dnf:
+    name: "postgresql{{ postgresql_version }}-contrib"
+    state: present
 

@@ -8,20 +8,20 @@
     name: rsyslog
     state: restarted
 
-- name: Restart PostgreSQL
-  block:
-    - name: Restart PostgreSQL Debian
-      become: true
-      systemd:
-        name: postgresql@{{ postgresql_version }}-main.service
-        state: restarted
-      when: ansible_os_family == "Debian"
+- name: Restart PostgreSQL Debian
+  become: true
+  systemd:
+    name: postgresql@{{ postgresql_version }}-main.service
+    state: restarted
+  when: ansible_os_family == "Debian"
+  listen: Restart PostgreSQL
 
-    - name: Restart PostgreSQL RedHat
-      become: true
-      shell:
-        cmd: "sudo -i -u postgres bash -c '{{ pg_lib_dir }}/bin/pg_ctl restart'"
-      when: ansible_os_family == "RedHat"
+- name: Restart PostgreSQL RedHat
+  become: true
+  shell:
+    cmd: "sudo -i -u postgres bash -c '{{ pg_lib_dir }}/bin/pg_ctl restart'"
+  when: ansible_os_family == "RedHat"
+  listen: Restart PostgreSQL
 
 - name: Clean DNF cache
   command:
