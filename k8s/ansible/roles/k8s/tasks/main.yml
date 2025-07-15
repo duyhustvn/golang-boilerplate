@@ -1,0 +1,72 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/k8s
+
+- block: 
+  - name: Copy rke2-artifacts into remote server
+    synchronize:
+      src: rke2-artifacts
+      dest: /root
+      recursive: yes
+      rsync_opts:
+        - "--chown=root:root"
+  tags: [ sync_rke2_artifacts ]
+  
+- block:
+  - name: Install Rke2 on all nodes
+    shell: |
+      INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts sh install.sh
+    args:
+      chdir: /root/rke2-artifacts
+    register: result
+
+  - name: Show result of install rke2
+    debug:
+      var: result
+  tags: [ install_rke2 ]
+
+- block: # Install and config keepalived for master only if have
+  - name: Install and config keepalived 
+    include_tasks: keepalived.yml
+  when: inventory_hostname in groups['rke2-master'] and vip is defined and vip != ''
+  tags: [ install_keepalived ]
+
+- block:
+  - name: Create rke2 config directory at {{ rke2_config_dir }}  
+    file:
+      path: '{{ rke2_config_dir }}'
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+  - name: Create Rke2 config.yml file
+    copy:
+      dest: '{{ rke2_config_dir }}/config.yaml'
+      content: |
+        {{ 'server: ' + rke2_server_url if inventory_hostname not in groups['rke2-master'] else '' }}
+        token: {{ rke2_token }}
+        {% if inventory_hostname in groups['rke2-master'] %}
+        tls-san:
+        {%- for san in rke2_tls_san %}	
+          - {{ san }}
+        {%- endfor %}	
+          {{ '- ' + vip if vip is defined and vip != '' }}
+        {% endif %}
+        # debug: true
+        disable: rke2-ingress-nginx
+        cni:
+          - canal
+        disable-cloud-controller: true
+        enable-servicelb: true
+        kube-apiserver-arg:
+          - "default-not-ready-toleration-seconds=30"
+          - "default-unreachable-toleration-seconds=30"
+      mode: '0644'
+  tags: [ config_rke2 ]
+
+- name: Start Rke2 service
+  systemd:
+    name: "{{ 'rke2-server' if inventory_hostname in groups['rke2-master'] else 'rke2-agent' }}"
+    state: started
+    enabled: yes
+  tags: [ start_rke2 ]
