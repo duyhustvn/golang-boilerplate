@@ -28,7 +28,12 @@
   set_fact:
     pgpool_pubkey: "{{ slurped.content | b64decode }}"
 
-- name: Ensure authorized_keys exists
+- name: Remove authorized_keys of user postgres first
+  file:
+    path: "{{ pg_home_dir }}/.ssh/authorized_keys"
+    state: absent
+
+- name: Ensure authorized_keys of user postgres exists
   file:
     path: "{{ pg_home_dir }}/.ssh/authorized_keys"
     state: touch
