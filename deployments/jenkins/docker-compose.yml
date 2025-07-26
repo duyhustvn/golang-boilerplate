@@ -1,18 +1,20 @@
 services:
   jenkins:
-    image: jenkins/jenkins:2.516.1-lts
+    image: myjenkins:2.516.1-lts
+    build: 
+      context: .
     container_name: jenkins
     restart: always
-    user: root                                    # so we can bind-mount the Docker socket
+    user: root                
     ports:
       - "8080:8080"      # Jenkins web UI
       - "50000:50000"    # Jenkins agent port
     environment:
       JENKINS_OPTS: "--prefix=/jenkins"           # optional: run under /jenkins path
     volumes:
-      - jenkins_home:/var/jenkins_home             # persist all Jenkins data
-      - /var/run/docker.sock:/var/run/docker.sock  # allow Jenkins (and its Docker plugins) to use host Docker
-      - /usr/bin/docker:/usr/bin/docker            # mount docker CLI for in-container builds
+      - jenkins_home:/var/jenkins_home    
+      # - /var/run/docker.sock:/var/run/docker.sock  # allow Jenkins (and its Docker plugins) to use host Docker
+      # - /usr/bin/docker:/usr/bin/docker            # mount docker CLI for in-container builds
 
 volumes:
   jenkins_home:
