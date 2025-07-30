@@ -38,9 +38,3 @@
   apt:
     name: postgresql-{{ postgresql_version }}
     state: present
-
-- name: Install contrib package # pg_stat_statements
-  apt:
-    name: postgresql{{ postgresql_version }}-contrib
-    state: present
-
