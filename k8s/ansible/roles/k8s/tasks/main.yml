@@ -43,13 +43,16 @@
     copy:
       dest: '{{ rke2_config_dir }}/config.yaml'
       content: |
-        {{ 'server: ' + rke2_server_url if inventory_hostname not in groups['rke2-master'] else '' }}
+        {%- if inventory_hostname in groups['rke2-master'] and inventory_hostname != groups['rke2-master'][0] %}
+        server: https://{{ (vip | default('')) or hostvars[groups['rke2-master'][0]].ansible_host }}:9345
+        {% endif %}
         token: {{ rke2_token }}
         {% if inventory_hostname in groups['rke2-master'] %}
         tls-san:
-        {%- for san in rke2_tls_san %}	
-          - {{ san }}
-        {%- endfor %}	
+        {% for host in groups['rke2-master'] %}
+          - {{ host }}
+          - {{ hostvars[host].ansible_host }}
+        {% endfor %}
           {{ '- ' + vip if vip is defined and vip != '' }}
         {% endif %}
         # debug: true
