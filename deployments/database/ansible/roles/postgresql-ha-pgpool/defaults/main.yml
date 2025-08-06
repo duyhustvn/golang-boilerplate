@@ -5,3 +5,6 @@
 pgdg_key_url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
 pgdg_key_dest: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
 pgdg_repo_file: /etc/apt/sources.list.d/pgdg.list
+
+pgpool_conf_num_init_children: 32
+pgpool_conf_max_pool: 4

@@ -47,3 +47,6 @@ pg_conf_max_parallel_workers: 4
 pg_conf_max_parallel_maintenance_workers: 2
 pg_conf_ssl: on
 pg_conf_include_dir: conf.d
+
+pgpool_conf_num_init_children: 32
+pgpool_conf_max_pool: 4

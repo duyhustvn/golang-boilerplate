@@ -191,7 +191,7 @@ enable_pool_hba = on
                                    #
                                    # (Only applicable for dynamic process management mode)
 
-#num_init_children = 32
+num_init_children = {{ pgpool_conf_num_init_children }}
                                    # Maximum Number of concurrent sessions allowed
                                    # (change requires restart)
 #min_spare_children = 5
@@ -202,7 +202,7 @@ enable_pool_hba = on
                                    # Maximum number of idle child processes waiting for connection
                                    # (Only applicable for dynamic process management mode)
 
-#max_pool = 4
+max_pool = {{ pgpool_conf_max_pool }}
                                    # Number of connection pool caches per connection
                                    # (change requires restart)
 
