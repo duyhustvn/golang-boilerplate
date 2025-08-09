@@ -27,3 +27,4 @@
 
   roles:
     - rke2
+    - helm
