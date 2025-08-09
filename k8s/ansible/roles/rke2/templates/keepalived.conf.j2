@@ -9,6 +9,6 @@ vrrp_instance VI_1 {
         auth_pass {{ vip_password | default('securepass') }}
     }
     virtual_ipaddress {
-        {{ vip }}
+        {{ vip }}/24
     }
 }
