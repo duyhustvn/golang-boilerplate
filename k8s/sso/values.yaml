@@ -41,7 +41,7 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 8080
+  port: 8000
 
 ingress:
   enabled: false
@@ -73,11 +73,11 @@ resources: {}
 
 livenessProbe:
   httpGet:
-    path: /
+    path: /api/health
     port: http
 readinessProbe:
   httpGet:
-    path: /
+    path: /api/health
     port: http
 
 autoscaling:
@@ -88,20 +88,28 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
+volumes: 
+  - name: log-storage
+    emptyDir: {}
+  - name: session-storage
+    persistentVolumeClaim:
+      claimName: sso-session-storage
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+volumeMounts:
+  - name: log-storage
+    mountPath: "logs"
+  - name: session-storage
+    mountPath: /tmp
 
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
+
+pvc:
+  name: sso-session-storage
+  storageClass: ""
+  storage: 1Gi
+  
