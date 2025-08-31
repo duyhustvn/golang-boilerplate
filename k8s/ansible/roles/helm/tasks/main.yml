@@ -16,7 +16,7 @@
         mode: "0644"
       environment: "{{ (proxy | default('') | trim) | ternary({'http_proxy': proxy, 'https_proxy': proxy}, {}) }}"
       when: not helm_local.stat.exists
-  become: no
+  become: false
   tags: [ download_helm ]
 
 - block: # Copy helm to controlled node and install
