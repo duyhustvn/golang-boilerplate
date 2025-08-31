@@ -1,0 +1,25 @@
+- name: Copy cni custom config to remote server
+  template:
+    src: 'cni/rke2-{{ cni }}-config.yaml'
+    dest: '/var/lib/rancher/rke2/server/manifests/rke2-{{ cni }}-config.yaml'
+    mode: '0400'
+    owner: root
+    group: root
+
+- block:
+    - name: Restart deploy cilium-operator
+      shell: |
+        sudo kubectl rollout restart deploy cilium-operator -n kube-system
+      register: result
+    - name: Show result of restart deploy cilium-operator
+      debug:
+        var: result
+
+    - name: Restart daemonset cilium
+      shell: |
+        sudo kubectl rollout restart ds cilium -n kube-system
+      register: result
+    - name: Show result of restart daemonset cilium
+      debug:
+        var: result
+  when: cni == 'cilium'

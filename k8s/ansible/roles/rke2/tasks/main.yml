@@ -18,7 +18,7 @@
   tags: [ sync_rke2_artifacts ]
   
 - block:
-  - name: Install Rke2 on all nodes
+  - name: Running rke2 installation script
     shell: |
       INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts sh install.sh
     args:
@@ -84,3 +84,8 @@
     debug:
       var: result
   tags: [ postinstall_rke2 ]
+
+- block: # Config cni
+  - name: Config CNI
+    include_tasks: config_cni.yml
+  tags: [ config_cni ]
