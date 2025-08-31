@@ -2,6 +2,11 @@
 ---
 # tasks file for roles/k8s
 
+- block: # Download rke2 if not exists
+    - name: Download rke2 if not exists
+      include_tasks: download_artifact.yml
+  tags: [ download_rke2 ]
+
 - block: 
   - name: Copy rke2-artifacts into remote server
     synchronize:
