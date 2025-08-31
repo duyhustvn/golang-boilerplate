@@ -9,8 +9,8 @@
 
 - name: Configure Keepalived for VIP {{ vip }} (masters only)
   template:
-    src: keepalived.conf.j2
-    dest: /etc/keepalived/keepalived.conf
+    src: 'keepalived/keepalived.conf.j2'
+    dest: '/etc/keepalived/keepalived.conf'
     mode: '0644'
   notify:
     - Reload Keepalived

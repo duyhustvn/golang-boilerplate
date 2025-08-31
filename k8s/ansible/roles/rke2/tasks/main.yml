@@ -40,32 +40,12 @@
       group: root
       mode: '0755'
   - name: Create Rke2 config.yml file
-    copy:
+    template:
+      src: 'rke2/config.yaml.j2'
       dest: '{{ rke2_config_dir }}/config.yaml'
-      content: |
-        node-ip: {{ node_ip }} 
-        {% if inventory_hostname in groups['rke2-master'] and inventory_hostname != groups['rke2-master'][0] %}
-        server: https://{{ hostvars[groups['rke2-master'][0]].ansible_host }}:9345
-        {% endif %}
-        token: {{ rke2_token }}
-        {% if inventory_hostname in groups['rke2-master'] %}
-        tls-san:
-        {% for host in groups['rke2-master'] %}
-          - {{ host }}
-          - {{ hostvars[host].ansible_host }}
-        {% endfor %}
-          {{ '- ' + vip if vip is defined and vip != '' }}
-        {% endif %}
-        # debug: true
-        disable: rke2-ingress-nginx
-        cni:
-          - canal
-        disable-cloud-controller: true
-        enable-servicelb: true
-        kube-apiserver-arg:
-          - "default-not-ready-toleration-seconds=30"
-          - "default-unreachable-toleration-seconds=30"
       mode: '0644'
+      owner: root
+      group: root
   tags: [ config_rke2 ]
 
 - name: Start Rke2 service

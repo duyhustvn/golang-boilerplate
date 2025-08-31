@@ -1,5 +1,5 @@
 vip: 192.168.56.100
 vip_interface: enp0s8
 
-proxy: "" # if not set proxy, keep it empty with quote, don't remove the quote
 
+cni: canal
