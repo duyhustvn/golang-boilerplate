@@ -89,3 +89,8 @@
   - name: Config CNI
     include_tasks: config_cni.yml
   tags: [ config_cni ]
+
+- block:
+  - name: Deploy storageclass
+    include_tasks: storageclass.yml
+  tags: [ deploy_storageclass ]
