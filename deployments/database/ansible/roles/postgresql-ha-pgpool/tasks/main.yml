@@ -48,3 +48,8 @@
 #       include_tasks: recover_standby.yml
 #   when: inventory_hostname == "node-db-01"
 #   tags: [ recover_standby, rc_all ]
+
+- block:
+    - name: Update pg_hba of PostgreSQL
+      include_tasks: psql/update_pghba.yml
+  tags: [ update_pghba ]
