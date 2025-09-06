@@ -24,8 +24,12 @@ pg_allowed_ips:
 pg_allowed_user_db:
   - db: sso
     user: application
-  - db: all
+    table_privilege: "SELECT,INSERT,UPDATE,DELETE"
+    sequence_privilege: "USAGE,SELECT,UPDATE"
+  - db: sso
     user: readonly
+    table_privilege: "SELECT"
+    sequence_privilege: "USAGE,SELECT"
 
 proxy: "" # if not set proxy, keep it empty with quote, don't remove the quote
 

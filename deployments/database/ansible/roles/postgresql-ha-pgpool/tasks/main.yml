@@ -59,3 +59,9 @@
       include_tasks: pgpool2/update_pool_hba.yml
   notify: Restart PgPool
   tags: [ update_pool_hba ]
+
+- block:
+    - name: Grant privilege
+      include_tasks: psql/grant_user.yml
+  when: inventory_hostname == "node-db-01"
+  tags: [ grant_user ]
