@@ -78,3 +78,9 @@ host    all             pgpool             {{ ip }}                 scram-sha-25
 {% for ip in pg_allowed_ips %}
 host    all             postgres             {{ ip }}                 scram-sha-256
 {% endfor %}
+
+{% for item in pg_allowed_user_db %}
+{% for ip in pg_allowed_ips %}
+host {{ item.db }}  {{ item.user }} {{ ip }} scram-sha-256
+{% endfor %}
+{% endfor %}

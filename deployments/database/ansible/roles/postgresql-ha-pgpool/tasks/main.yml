@@ -53,3 +53,9 @@
     - name: Update pg_hba of PostgreSQL
       include_tasks: psql/update_pghba.yml
   tags: [ update_pghba ]
+
+- block:
+    - name: Update pool_hba of Pgpool
+      include_tasks: pgpool2/update_pool_hba.yml
+  notify: Restart PgPool
+  tags: [ update_pool_hba ]

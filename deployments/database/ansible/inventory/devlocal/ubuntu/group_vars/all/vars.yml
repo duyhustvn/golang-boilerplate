@@ -23,9 +23,9 @@ pg_allowed_ips:
 
 pg_allowed_user_db:
   - db: sso
-    user: application_user
+    user: application
   - db: all
-    user: readonly_user
+    user: readonly
 
 proxy: "" # if not set proxy, keep it empty with quote, don't remove the quote
 
