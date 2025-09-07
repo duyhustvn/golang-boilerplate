@@ -113,3 +113,10 @@ pvc:
   storageClass: ""
   storage: 1Gi
   
+
+db:
+  user: application
+  password: appPasswd
+  host: 192.168.56.110
+  port: 9999
+  dbName: sso

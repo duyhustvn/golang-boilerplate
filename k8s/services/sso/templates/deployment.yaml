@@ -54,7 +54,11 @@ spec:
             - name: driverName
               value: postgres
             - name: dataSourceName
-              value: user=postgres password=changeme host=192.168.56.1 port=5434 sslmode=disable dbname=sso
+              value: user={{ .Values.db.user }} password={{ .Values.db.password }} host={{ .Values.db.host }} port={{ .Values.db.port }} sslmode=disable dbname={{ .Values.db.dbName }}
+            - name: dbName
+              value: {{ .Values.db.dbName }}
+            - name: showSql
+              value: "true"
           
       {{- with .Values.volumes }}
       volumes:
