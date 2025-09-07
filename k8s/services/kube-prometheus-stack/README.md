@@ -13,3 +13,10 @@ kubectl get secret prometheus-grafana -o jsonpath={.data.admin-user} | base64 -d
 ```
 kubectl get secret prometheus-grafana -o jsonpath={.data.admin-password} | base64 -d; echo
 ```
+
+## Forward Port 
+- Grafana
+
+```
+kubectl port-forward svc/prometheus-grafana 3000:80
+```
