@@ -10,6 +10,7 @@ import (
 	authsvc "boilerplate/internal/modules/auth/service"
 	authkafka "boilerplate/internal/modules/auth/transport/kafka"
 	authrest "boilerplate/internal/modules/auth/transport/rest"
+	benchrest "boilerplate/internal/modules/bench/transport/rest"
 	healthchecksvc "boilerplate/internal/modules/healthcheck/service"
 	healthcheckrest "boilerplate/internal/modules/healthcheck/transport/rest"
 	kafkaclient "boilerplate/pkg/kafka"
@@ -132,6 +133,9 @@ func (s *Server) Run() error {
 
 	authHandlers := authrest.NewAuthHandlers(apiRouter, s.log, s.Cfg, authSvc, s.metricsCollector)
 	authHandlers.RegisterRouter()
+
+    benchHandlers := benchrest.NewHandlers(apiRouter, s.log, s.Cfg, s.metricsCollector)
+    benchHandlers.RegisterRouter()
 
 	// Swagger: http://localhost:8001/docs
 	s.router.Handle("/swagger.yaml", http.FileServer(http.Dir("./docs")))
