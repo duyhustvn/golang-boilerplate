@@ -5,21 +5,20 @@ servicePort: 8001
 logLevel: INFO
 logPath: logs/app.log
 
-redisAddrs: 192.168.101.14:6379
+redisAddrs: 192.168.56.131:6379
 redisPassword:
 redisChannel:
 redisPoolSize: 20
 
-kafkaBrokers: kafka:9092
+kafkaBrokers: 192.168.56.1:9095
 kafkaGroupId: boilerplate
 kafkaClientUser: user
 kafkaPoolSize: 30
 kafkaSignupUserTopic: register
+kafkaSaslMechanism: none
 
-postgresHost: postgresql-ha-pgpool
-postgresPort: 5432
-postgresUsername: postgres
-postgresDbName: golang_boilerplate
+db:
+  name: boilerplate
 
 statsdAddr: 192.168.101.14:8125
 statsdPrefix: boilerplate_prefix

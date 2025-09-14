@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ .Values.container.name }}-svc
   labels:
-    app: {{ .Values.container.name }}-{{ .Values.environment }}
+    app: {{ .Values.container.name }}
 spec:
   ports:
   - port: 80

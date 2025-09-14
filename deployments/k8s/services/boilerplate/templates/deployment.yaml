@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.container.name }}-{{ .Values.environment }}
+  name: {{ .Values.container.name }}
   labels:
-    app: {{ .Values.container.name }}-{{ .Values.environment }} # deployment labels
+    app: {{ .Values.container.name }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -71,16 +71,15 @@ spec:
             - name: KAFKA_CLIENT_USER
               value: {{ .Values.kafkaClientUser | quote }}
             - name: KAFKA_CLIENT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: kafka-user-passwords
-                  key: client-passwords
+              value: {{ .Values.kafkaClientPassword | quote }}
             - name: KAFKA_GROUP_ID
               value: {{ .Values.kafkaGroupId | quote }}
             - name: KAFKA_POOL_SIZE
               value: {{ .Values.kafkaPoolSize | quote }}
             - name: KAFKA_SIGNUP_USER_TOPIC
               value: {{ .Values.kafkaSignupUserTopic | quote }}
+            - name: KAFKA_SASL_MECHANISM
+              value: {{ .Values.kafkaSaslMechanism | quote }}
 
             - name: STATSD_ADDR
               value: {{ .Values.statsdAddr | quote }}
@@ -90,15 +89,25 @@ spec:
               value: {{ .Values.statsdFlushPeriod | quote }}
 
             - name: POSTGRES_HOST
-              value: {{ .Values.postgresHost | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: postgresql-config
+                  key: POSTGRES_HOST
             - name: POSTGRES_PORT
-              value: {{ .Values.postgresPort | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: postgresql-config
+                  key: POSTGRES_PORT
             - name: POSTGRES_DBNAME
-              value: {{ .Values.postgresDbName | quote }}
+              value: {{ .Values.db.name | quote }}
             - name: POSTGRES_USERNAME
-              value: {{ .Values.postgresUsername | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: postgresql-config
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: postgresql-ha-postgresql
-                  key: password
+                  name: postgresql-secret
+                  key: POSTGRES_PASSWORD
+

@@ -116,8 +116,4 @@ pvc:
   
 
 db:
-  user: application
-  password: appPasswd # not recommend to put password here make it secret
-  host: 192.168.56.110
-  port: 9999
   dbName: sso

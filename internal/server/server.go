@@ -115,7 +115,7 @@ func (s *Server) Run() error {
 
 	authReaderMessageProcess := authkafka.NewAuthMessageProcessor(s.log, s.Cfg, authSvc, s.metricsCollector)
 	brokers := strings.Split(s.Cfg.Kafka.Brokers, ",")
-	cg := kafkaclient.NewConsumerGroup(brokers, "SASL_PLAIN", s.Cfg.Kafka.GroupID, s.log, *s.Cfg)
+	cg := kafkaclient.NewConsumerGroup(brokers, s.Cfg.Kafka.SaslMechanism, s.Cfg.Kafka.GroupID, s.log, *s.Cfg)
 
 	go cg.ConsumeTopic(context.Background(), []string{s.Cfg.Kafka.SignupUserTopic}, s.Cfg.Kafka.PoolSize, authReaderMessageProcess.ProcessMessage)
 

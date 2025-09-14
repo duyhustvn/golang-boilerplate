@@ -9,6 +9,7 @@ type Kafka struct {
 	ClientPassword  string
 	PoolSize        int
 	SignupUserTopic string
+    SaslMechanism string
 }
 
 func (k *Kafka) GetKafkaEnv() *Kafka {
@@ -24,5 +25,6 @@ func (k *Kafka) GetKafkaEnv() *Kafka {
 	}
 
 	k.SignupUserTopic = GetEnv("KAFKA_SIGNUP_USER_TOPIC")
+    k.SaslMechanism = GetEnv("KAFKA_SASL_MECHANISM")
 	return k
 }
