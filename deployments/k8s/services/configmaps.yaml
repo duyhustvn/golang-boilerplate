@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: postgresql-config
+
+data:
+  POSTGRES_USER: "application"
+  POSTGRES_HOST: "192.168.56.110"
+  POSTGRES_PORT: "9999"

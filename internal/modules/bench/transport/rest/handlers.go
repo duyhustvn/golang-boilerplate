@@ -39,7 +39,7 @@ func NewHandlers(
 // @Accept json
 // @Produce json
 // @Param timeout query string true "Set timeout for this API"
-// @Success 200 {object} common.RestResponse{data=benchmodeln.TimeoutResponse}
+// @Success 200 {object} common.RestResponse{data=benchmodel.TimeoutResponse}
 // @Router /api/timeout [get]
 // @Tags Auth
 func (handler *benchHandlers) TimeoutAPI(w http.ResponseWriter, r *http.Request) {
