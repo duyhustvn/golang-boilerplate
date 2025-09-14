@@ -2,6 +2,7 @@ package kafkaclient
 
 import (
 	"context"
+	"strings"
 	"sync"
 
 	"boilerplate/internal/config"
@@ -35,27 +36,27 @@ type consumerGroup struct {
 
 // NewConsumerGroup kafka consumer group constructor
 func NewConsumerGroup(
-    brokers []string, 
-    authMechanism string, 
-    groupID string, 
-    log logger.Logger, 
-    cfg config.Config,
+	brokers []string,
+	authMechanism string,
+	groupID string,
+	log logger.Logger,
+	cfg config.Config,
 ) *consumerGroup {
 	return &consumerGroup{brokers: brokers, groupID: groupID, authMechanism: authMechanism, log: log, cfg: cfg}
 }
 
 // GetNewKafkaReader create new kafka reader
 func (c *consumerGroup) GetNewKafkaReader(
-    kafkaURL []string, 
-    groupTopics []string, 
-    groupID string,
+	kafkaURL []string,
+	groupTopics []string,
+	groupID string,
 ) *kafka.Reader {
 	c.log.Infof("Listen to topic: %+v", groupTopics)
 	dialer := kafka.Dialer{
 		Timeout: dialTimeout,
 	}
 
-	if c.authMechanism == "SASL_PLAIN" {
+	if strings.ToUpper(c.authMechanism) == "SASL_PLAIN" {
 		dialer.SASLMechanism = plain.Mechanism{
 			Username: c.cfg.Kafka.ClientUser,
 			Password: c.cfg.Kafka.ClientPassword,

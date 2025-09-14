@@ -67,11 +67,20 @@ spec:
               value: {{ .Values.redisPoolSize | quote }}
 
             - name: KAFKA_BROKERS
-              value: {{ .Values.kafkaBrokers | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_BROKERS
             - name: KAFKA_CLIENT_USER
-              value: {{ .Values.kafkaClientUser | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_CLIENT_USER
             - name: KAFKA_CLIENT_PASSWORD
-              value: {{ .Values.kafkaClientPassword | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-secret
+                  key: KAFKA_CLIENT_PASSWORD
             - name: KAFKA_GROUP_ID
               value: {{ .Values.kafkaGroupId | quote }}
             - name: KAFKA_POOL_SIZE
@@ -79,7 +88,10 @@ spec:
             - name: KAFKA_SIGNUP_USER_TOPIC
               value: {{ .Values.kafkaSignupUserTopic | quote }}
             - name: KAFKA_SASL_MECHANISM
-              value: {{ .Values.kafkaSaslMechanism | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: kafka-config
+                  key: KAFKA_SASL_MECHANISM
 
             - name: STATSD_ADDR
               value: {{ .Values.statsdAddr | quote }}
