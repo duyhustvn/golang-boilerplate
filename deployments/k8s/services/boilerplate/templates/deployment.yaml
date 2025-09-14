@@ -58,7 +58,10 @@ spec:
               value: {{ .Values.logPath | quote }}
 
             - name: REDIS_ADDRS
-              value: {{ .Values.redisAddrs | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: redis-config
+                  key: REDIS_ADDRS
             - name: REDIS_PASSWORD
               value: {{ .Values.redisPassword | quote }}
             - name: REDIS_CHANNEL
