@@ -1,6 +1,6 @@
 services:
   influxdb:
-    image: {{ image }}
+    image: {{ influxdb_image }}
     container_name: influxdb
     restart: always
     environment:

@@ -2,5 +2,5 @@
 ---
 # defaults file for roles/influxdb
 
-image: influxdb:1.12
+influxdb_image: influxdb:1.12
 deploy_dir: /u01/influxdb
