@@ -9,3 +9,5 @@ pgdg_repo: https://apt.postgresql.org/pub/repos/apt
 
 pgpool_conf_num_init_children: 32
 pgpool_conf_max_pool: 4
+
+proxy: ''
