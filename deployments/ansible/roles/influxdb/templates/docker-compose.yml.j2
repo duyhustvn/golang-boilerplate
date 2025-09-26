@@ -1,0 +1,17 @@
+services:
+  influxdb:
+    image: {{ image }}
+    container_name: influxdb
+    restart: always
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME={{ influxdb_username }}
+      - DOCKER_INFLUXDB_INIT_PASSWORD={{ influxdb_pass }}
+      - DOCKER_INFLUXDB_INIT_BUCKET={{ influxdb_database }}
+    ports:
+      - 8086:8086
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+
+volumes:
+  influxdb_data:
