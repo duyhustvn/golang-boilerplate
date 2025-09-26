@@ -1,0 +1,6 @@
+outputs:
+  - name: influxdb
+    urls:
+      - http://192.168.56.141:8086
+    database: "telegraf"
+    username: "influx"

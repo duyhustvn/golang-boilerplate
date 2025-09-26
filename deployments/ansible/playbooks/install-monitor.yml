@@ -1,11 +1,8 @@
 ---
-- name: Install kafka
-  hosts: node-kafka-01
+- name: Setup monitor
+  hosts: node-monitor-01
   become: true
   gather_facts: true
-  pre_tasks:
-    - include_vars: ../group_vars/all/vars.yml
-      tags: [ always ]
 
   tasks:
     - name: Debug
@@ -25,4 +22,4 @@
 
   roles:
     - docker
-    - kafka
+    - telegraf
