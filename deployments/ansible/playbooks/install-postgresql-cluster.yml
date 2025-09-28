@@ -31,4 +31,5 @@
 
 
   roles:
+    - docker
     - postgresql-ha-pgpool

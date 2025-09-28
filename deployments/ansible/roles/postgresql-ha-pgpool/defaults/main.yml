@@ -11,3 +11,5 @@ pgpool_conf_num_init_children: 32
 pgpool_conf_max_pool: 4
 
 proxy: ''
+
+exporter_deploy_dir: '/u01/exporter'
