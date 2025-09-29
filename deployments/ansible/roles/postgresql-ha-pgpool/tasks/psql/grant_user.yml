@@ -13,7 +13,7 @@
       -v sequence_privilege="$SEQUENCE_PRIVILEGE" \
       -f /tmp/grant_user.sql
   environment:
-    PGPASSWORD: "{{ postgres_user_pass }}"
+    PGPASSWORD: "{{ postgres_pass }}"
     DBNAME: "{{ item.db }}"
     APPUSER: "{{ item.user }}"
     APPPASS: "{{ lookup('vars', item.user + '_pass') }}"
