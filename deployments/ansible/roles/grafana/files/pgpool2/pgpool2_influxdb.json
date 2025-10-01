@@ -122,6 +122,7 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_role]]",
           "groupBy": [
             {
               "params": [
@@ -132,6 +133,12 @@
             {
               "params": [
                 "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
               ],
               "type": "tag"
             },
@@ -300,7 +307,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -320,22 +327,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byFrameRefID",
-              "options": "B"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "continuous-reds"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 6,
@@ -469,7 +461,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -494,32 +486,7 @@
           },
           "unit": "bytes"
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "pgpool2_pool_nodes_replication_delay.mean { hostname: 192.168.56.113, role: standby }"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": true,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 6,
@@ -544,6 +511,7 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
           "groupBy": [
             {
               "params": [
@@ -641,7 +609,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -686,8 +654,54 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_backend_stats_error_cnt",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT non_negative_derivative(mean(\"counter\"),1s) FROM \"pgpool2_pool_backend_stats_error_cnt\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\", \"role\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "counter"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Error Message Counts",
@@ -725,7 +739,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -770,8 +784,54 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_backend_stats_fatal_cnt",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT non_negative_derivative(mean(\"counter\"),1s) FROM \"pgpool2_pool_backend_stats_fatal_cnt\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\", \"role\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "counter"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Fatal Message Counts",
@@ -809,7 +869,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -858,8 +918,54 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_backend_stats_panic_cnt",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT non_negative_derivative(mean(\"counter\"),1s) FROM \"pgpool2_pool_backend_stats_panic_cnt\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\", \"role\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "counter"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Panic Message Counts",
@@ -903,6 +1009,9 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -910,7 +1019,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -959,8 +1068,54 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_backend_stats_select_cnt",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT non_negative_derivative(mean(\"counter\"),1s) FROM \"pgpool2_pool_backend_stats_select_cnt\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\", \"role\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "counter"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "SELECT statement counts",
@@ -998,7 +1153,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1047,8 +1202,54 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_backend_stats_delete_cnt",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT non_negative_derivative(mean(\"counter\"),1s) FROM \"pgpool2_pool_backend_stats_delete_cnt\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\", \"role\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "counter"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "DELETE statement counts",
@@ -1086,7 +1287,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1135,8 +1336,54 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_backend_stats_insert_cnt",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT non_negative_derivative(mean(\"counter\"),1s) FROM \"pgpool2_pool_backend_stats_insert_cnt\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\", \"role\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "counter"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "INSERT statement counts",
@@ -1174,7 +1421,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1223,14 +1470,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_backend_stats_update_cnt",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT non_negative_derivative(mean(\"counter\"),1s) FROM \"pgpool2_pool_backend_stats_update_cnt\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\", \"role\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "counter"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "UPDATE statement counts",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1261,7 +1558,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1310,14 +1607,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_backend_stats_ddl_cnt",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT non_negative_derivative(mean(\"counter\"),1s) FROM \"pgpool2_pool_backend_stats_ddl_cnt\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\", \"role\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "counter"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "DDL statement counts",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1348,7 +1695,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1397,8 +1744,54 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_backend_stats_other_cnt",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT non_negative_derivative(mean(\"counter\"),1s) FROM \"pgpool2_pool_backend_stats_other_cnt\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\", \"role\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "counter"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Other statement counts",
@@ -1418,6 +1811,10 @@
       "type": "row"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1448,7 +1845,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1497,14 +1894,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_health_check_stats_total_count",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT mean(\"gauge\") FROM \"pgpool2_pool_health_check_stats_total_count\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Number of health check count in total",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1535,7 +1982,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1584,14 +2031,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_health_check_stats_success_count",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT mean(\"gauge\") FROM \"pgpool2_pool_health_check_stats_success_count\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Number of Successful Health Check ",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1622,7 +2119,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1671,14 +2168,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_health_check_stats_fail_count",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT mean(\"gauge\") FROM \"pgpool2_pool_health_check_stats_fail_count\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Number of failed health check",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1709,7 +2256,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1758,14 +2305,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_health_check_stats_skip_count",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT mean(\"gauge\") FROM \"pgpool2_pool_health_check_stats_skip_count\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Number of skipped health check",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1796,7 +2393,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1845,14 +2442,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_health_check_stats_retry_count",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT mean(\"gauge\") FROM \"pgpool2_pool_health_check_stats_retry_count\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Number of retried health check",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1883,7 +2530,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1933,14 +2580,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_health_check_stats_max_retry_count",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT mean(\"gauge\") FROM \"pgpool2_pool_health_check_stats_max_retry_count\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Number of maximum retried health check",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1971,7 +2668,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -2021,14 +2718,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_health_check_stats_average_retry_count",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT mean(\"gauge\") FROM \"pgpool2_pool_health_check_stats_average_retry_count\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Number of average retried health check",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2059,7 +2806,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -2109,14 +2856,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_health_check_stats_average_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT mean(\"gauge\") FROM \"pgpool2_pool_health_check_stats_average_duration\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Average health check duration",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2147,7 +2944,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -2197,14 +2994,64 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_health_check_stats_min_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT mean(\"gauge\") FROM \"pgpool2_pool_health_check_stats_min_duration\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Minimum health check duration",
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2235,7 +3082,7 @@
             },
             "showPoints": "auto",
             "showValues": false,
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -2285,8 +3132,54 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "alias": "[[tag_hostname]] ([[tag_role]])",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "hostname::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "role::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_health_check_stats_max_duration",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT mean(\"gauge\") FROM \"pgpool2_pool_health_check_stats_max_duration\" WHERE $timeFilter AND \"hostname\" =~ /$backend_nodes/ GROUP BY time($__interval), \"hostname\" fill(null)",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Maximum health check duration",
@@ -2306,6 +3199,10 @@
       "type": "row"
     },
     {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "eezntakesykg0f"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2352,8 +3249,41 @@
       "pluginVersion": "12.2.0",
       "targets": [
         {
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "pgpool2_pool_cache_cache_hit_ratio",
+          "orderByTime": "ASC",
+          "policy": "default",
           "query": "SELECT last(\"gauge\") FROM \"pgpool2_pool_cache_cache_hit_ratio\" WHERE $timeFilter",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "gauge"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Query Cache Hit Ratio",
@@ -2400,5 +3330,5 @@
   "timezone": "",
   "title": "Pgpool-II-Influxdb",
   "uid": "pgpool2_influxdb",
-  "version": 6
+  "version": 58
 }
