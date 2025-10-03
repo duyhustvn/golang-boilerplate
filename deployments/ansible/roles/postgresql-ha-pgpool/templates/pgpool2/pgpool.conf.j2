@@ -243,7 +243,7 @@ log_connections = on
                                    # Log disconnections
 log_pcp_processes = on
                                    # Log PCP Processes
-log_hostname = on
+log_hostname = off                 # It will perform reverse DNS lookup ip to hostname. Should not be turn on
                                    # Hostname will be shown in ps status
                                    # and in logs if connections are logged
 log_statement = on
@@ -750,10 +750,10 @@ if_cmd_path = '{{ if_cmd_path }}'
                                     # path to the directory where if_up/down_cmd exists
                                     # If if_up/down_cmd starts with "/", if_cmd_path will be ignored.
                                     # (change requires restart)
-if_up_cmd = '/usr/bin/sudo {{ if_cmd_path }}/ip addr add $_IP_$/24 dev {{ device_interface  }} label {{ device_interface }}:0'
+if_up_cmd = '/usr/bin/sudo {{ if_cmd_path }}/ip addr add $_IP_$/{{ cidr_prefix }} dev {{ device_interface  }} label {{ device_interface }}:0'
                                     # startup delegate IP command
                                     # (change requires restart)
-if_down_cmd = '/usr/bin/sudo {{ if_cmd_path }}/ip addr del $_IP_$/24 dev {{ device_interface }}'
+if_down_cmd = '/usr/bin/sudo {{ if_cmd_path }}/ip addr del $_IP_$/{{ cidr_prefix }} dev {{ device_interface }}'
                                     # shutdown delegate IP command
                                     # (change requires restart)
 arping_path = '{{ arping_path }}'

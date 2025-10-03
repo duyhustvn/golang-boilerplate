@@ -6,7 +6,7 @@ services:
       - 9719:9719
     restart: always
     environment:
-      PGPOOL_SERVICE: 172.17.0.1
+      PGPOOL_SERVICE: {{ vip }}
       PGPOOL_SERVICE_PORT: 9999
       POSTGRES_USERNAME: postgres
       POSTGRES_PASSWORD: {{ postgres_pass }}

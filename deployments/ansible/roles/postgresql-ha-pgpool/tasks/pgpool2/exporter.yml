@@ -15,7 +15,7 @@
       backup: yes
   tags: [ config_exporter ]
 
-- name: Deploy influxdb
+- name: Deploy pgpool exporter
   shell: |
     docker compose up -d
   args:

@@ -46,6 +46,7 @@
 - block:
     - name: Deploy pgpool exporter
       include_tasks: pgpool2/exporter.yml
+  when: inventory_hostname == "node-db-01"
   tags: [ deploy_exporter, rc_all ]
 
 # - block:
