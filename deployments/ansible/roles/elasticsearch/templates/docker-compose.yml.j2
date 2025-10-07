@@ -5,7 +5,7 @@ services:
     volumes: 
       - ./logs:/usr/share/elasticsearch/logs 
       - ./config/custom_jvm.options:/usr/share/elasticsearch/config/jvm.options.d/custom_jvm.options:ro 
-      # - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:rw 
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:rw 
       - es_data:/usr/share/elasticsearch/data 
     logging: 
       driver: json-file 
@@ -13,12 +13,12 @@ services:
         max-size: "10m" 
         max-file: "10" 
         labels: "program" 
-      restart: always 
+    restart: always 
     network_mode: host 
     extra_hosts: 
-    {% for host in groups['all'] %} 
+    {%- for host in groups['es'] %} 
     - "{{ hostvars[host]['node_name']}}={{ hostvars[host]['ansible_host'] }}" 
-    {% endfor %} 
+    {%- endfor %} 
 
 volumes: 
   es_data: 

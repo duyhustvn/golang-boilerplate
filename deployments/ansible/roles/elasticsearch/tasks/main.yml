@@ -49,7 +49,7 @@
 
 - name: Run docker compose 
   shell: | 
-    docker compose up -d 
+    docker compose up -d --force-recreate
   args: 
     chdir: "{{ es_deploy_dir }}" 
   register: result 
