@@ -5,7 +5,7 @@
 proxy: ""
 rke2_server_url: "https://{{ vip if vip is defined and vip != '' else hostvars[group['rke2-master'][0]].ansible_host }}:9345"
 rke2_tls_san: []
-cni: canal
+cni: cilium
 
 rke2_version: v1.33.4+rke2r1
 rke2_images_core_url: https://github.com/rancher/rke2/releases/download/{{ rke2_version }}/rke2-images-core.linux-amd64.tar.gz
