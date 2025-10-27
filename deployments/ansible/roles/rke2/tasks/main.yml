@@ -83,14 +83,17 @@
   - name: Show result of running cp kubectl 
     debug:
       var: result
+  when: inventory_hostname in groups['rke2-master']
   tags: [ postinstall_rke2 ]
 
 - block: # Config cni
   - name: Config CNI
     include_tasks: config_cni.yml
+  when: inventory_hostname in groups['rke2-master'] 
   tags: [ config_cni ]
 
 - block:
   - name: Deploy storageclass
     include_tasks: storageclass.yml
+  when: inventory_hostname in groups['rke2-master'] 
   tags: [ deploy_storageclass ]
