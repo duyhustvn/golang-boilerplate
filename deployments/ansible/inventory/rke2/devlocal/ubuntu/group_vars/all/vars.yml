@@ -2,3 +2,5 @@ vip: 192.168.56.100
 vip_interface: enp0s8
 
 cni: cilium
+
+

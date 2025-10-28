@@ -15,10 +15,11 @@ services:
     volumes: 
       - ./pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf 
       - ./configs/logstash.yml:/usr/share/logstash/config/logstash.yml 
-    #   - ./configs/logstash.template.json:/usr/share/logstash/templates/logstash.template.json 
-    #   - ./configs/pipelines.yml:/usr/share/logstash/config/pipelines.yml 
 
     stdin_open: true 
     tty: true 
     restart: always 
     network_mode: host
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+

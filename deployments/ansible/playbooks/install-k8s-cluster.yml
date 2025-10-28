@@ -1,6 +1,6 @@
 ---
 - name: Install K8s cluster
-  hosts: node-master-01,node-master-02
+  hosts: master-02,master-03,worker-01,worker-02,worker-03
   become: true
   gather_facts: true
   pre_tasks:
