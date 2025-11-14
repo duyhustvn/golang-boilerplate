@@ -1,0 +1,24 @@
+services:
+  pgpool:
+    image: bitnamilegacy/pgpool:4.6.3
+    container_name: pgpool
+    environment:
+      - PGPOOL_BACKEND_NODES=0:192.168.56.111:5432,1:192.168.56.112:5432,2:192.168.56.113:5432
+      - PGPOOL_SR_CHECK_USER=pgpool
+      - PGPOOL_SR_CHECK_PASSWORD=pgpoolPasswd
+      - PGPOOL_ENABLE_LDAP=no
+      - PGPOOL_POSTGRES_USERNAME=postgres
+      - PGPOOL_POSTGRES_PASSWORD=postgresPasswd
+      - PGPOOL_ADMIN_USERNAME=postgres
+      - PGPOOL_ADMIN_PASSWORD=postgresPasswd
+      - PGPOOL_USER_CONF_FILE=/config/pgpool.conf
+      - PGPOOL_USER_HBA_FILE=/config/pg_hba.conf
+    volumes:
+      - ./pgpool-config/pgpool.conf:/config/pgpool.conf
+      - ./pgpool-config/pg_hba.conf:/config/pg_hba.conf
+    healthcheck:
+      test: ["CMD", "/opt/bitnami/scripts/pgpool/healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    network_mode: host
