@@ -13,7 +13,26 @@
 - Update pg_hba.conf
     
     ```sql
-    host    replication   repl     192.168.56.0/24     scram-sha-256
+    # Database administrative login by Unix domain socket
+    # local   all             postgres                                peer
+    
+    # TYPE  DATABASE        USER            ADDRESS                 METHOD
+    
+    # "local" is for Unix domain socket connections only
+    local   all             all                                     scram-sha-256
+    # IPv4 local connections:
+    host    all             all             127.0.0.1/32            scram-sha-256
+    # IPv6 local connections:
+    host    all             all             ::1/128                 scram-sha-256
+    # Allow replication connections from localhost, by a user with the
+    # replication privilege.
+    local   replication     all                                     scram-sha-256
+    host    replication     all             127.0.0.1/32            scram-sha-256
+    host    replication     all             ::1/128                 scram-sha-256
+    host    replication     repl            192.168.56.0/24         scram-sha-256
+    host    all             postgres        192.168.56.0/24         scram-sha-256
+    host    all             pgpool          192.168.56.0/24         scram-sha-256
+    
     ```
     
 
@@ -21,8 +40,20 @@
 
 - Create PostgreSQL user repl
     
-    ```sql
-    CREATE ROLE repl WITH REPLICATION LOGIN PASSWORD 'replPasswd'
+    ```bash
+    sudo -u postgres psql -c "CREATE ROLE repl WITH REPLICATION LOGIN PASSWORD 'replPasswd'"
+    ```
+    
+- Change password of user postgres
+    
+    ```bash
+    sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgresPasswd'"
+    ```
+    
+- Create PostgreSQL user pgpool
+    
+    ```bash
+    sudo -u postgres psql -c "CREATE ROLE pgpool WITH LOGIN PASSWORD 'pgpoolPasswd'"
     ```
     
 
@@ -121,6 +152,8 @@ postgres=# select * from pg_replication_slots;
 
 # Config failover
 
+In case primary node is down, standby node 1 will become master and standby node 2 will follow the new master
+
 ## On the primary node
 
 - Stop the master node
@@ -129,8 +162,8 @@ postgres=# select * from pg_replication_slots;
 
 - Promote the standby server
     
-    ```sql
-    SELECT pg_promote();
+    ```bash
+    sudo -u postgres psql -c "SELECT pg_promote()"
     ```
     
 
@@ -138,8 +171,14 @@ postgres=# select * from pg_replication_slots;
 
 - Promote the standby server
     
-    ```sql
-    SELECT pg_promote();
+    ```bash
+    sudo -u postgres psql -c "SELECT pg_promote()"
+    ```
+    
+- Stop PostgreSQL
+    
+    ```bash
+    sudo systemctl stop postgresql@16-main.service
     ```
     
 - Remove PostgreSQL’s data folder
