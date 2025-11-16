@@ -13,6 +13,11 @@
   tags: [ install_postgresql, rc_all ]
 
 - block:
+    - name: Change data root
+      include_tasks: psql/change_data_root.yml
+  tags: [ change_data_root, rc_all ]
+
+- block:
     - name: Install Pgpool2
       include_tasks: install/install_pgpool2_debian.yml
       when: ansible_os_family == "Debian"

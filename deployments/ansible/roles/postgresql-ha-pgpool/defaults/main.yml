@@ -10,7 +10,7 @@ pgdg_repo: https://apt.postgresql.org/pub/repos/apt
 
 # Postgresql
 postgresql_version: 16
-pg_data_dir: /var/lib/postgresql/{{ postgresql_version }}/main
+pg_data_dir: /u01/data/postgresql/{{ postgresql_version }}/main
 pg_config_dir: /etc/postgresql/{{ postgresql_version }}/main
 pg_home_dir: /var/lib/postgresql
 pg_lib_dir: /usr/lib/postgresql/{{ postgresql_version }}
