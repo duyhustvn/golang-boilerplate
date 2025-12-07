@@ -4,6 +4,6 @@
 
 docker_log_max_size: 10m
 docker_log_max_file: 3
-docker_data_root: '/u01/docker'
+docker_data_root: '/u01/data/docker'
 proxy: ''
 
