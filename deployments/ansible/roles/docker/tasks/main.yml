@@ -2,13 +2,12 @@
 ---
 # tasks file for roles/docker
 
-- block:
-  - name: Check if docker is installed
-    command: which docker
-    register: docker_check
-    ignore_errors: true
+- name: Check if docker is installed
+  command: which docker
+  register: docker_check
+  ignore_errors: yes
 
-  - name: Install docker block
-    include_tasks: install_docker.yml
-    when: docker_check.rc != 0
-  tags: [ install_docker ]
+- block:
+  - name: Install docker
+    include_tasks: install_docker_{{ansible_os_family}}.yml
+  when: docker_check.rc != 0
