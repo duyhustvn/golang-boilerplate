@@ -7,6 +7,40 @@ service:
 serviceAccount:
   create: true
 
+rbac:
+  create: true # role
+  clusterWide: true # clusterrole
+  rules: 
+    - apiGroups:
+        - "" # core API groups 
+      resources:
+        - nodes
+        - nodes/proxy
+        - nodes/metrics
+        - services
+        - endpoints
+        - pods
+        - ingresses
+        - configmaps
+      verbs:
+        - get
+        - list
+        - watch
+
+    - apiGroups:
+        - "extensions" 
+      resources:
+        - ingresses/status
+        - ingresses
+      verbs:
+        - get
+        - list
+        - watch
+    - nonResourceURLs:
+        - "/metrics"
+      verbs:
+        - get
+
 env:
   - name: NODE_IP
     valueFrom:
