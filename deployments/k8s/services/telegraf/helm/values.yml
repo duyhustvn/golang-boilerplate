@@ -17,6 +17,7 @@ rbac:
         - nodes
         - nodes/proxy
         - nodes/metrics
+        - nodes/stats
         - services
         - endpoints
         - pods
@@ -112,7 +113,7 @@ config:
     #     data_format: "influx"
     - influxdb:
         urls:
-          - "https://$INFLUXDB_IP:$INFLUXDB_PORT"
+          - "http://$INFLUXDB_IP:$INFLUXDB_PORT"
         database: "$INFLUXDB_DATABASE"
         precision: "s"
         timeout: "10s"
