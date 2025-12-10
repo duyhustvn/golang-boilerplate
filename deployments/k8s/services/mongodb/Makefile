@@ -1,2 +1,7 @@
+service=mongodb
+
 apply:
-	helm upgrade --install mongodb bitnami/mongodb --version 18.1.10
+	helm upgrade --install $(service) bitnami/mongodb --version 18.1.10 -f helm/values.yml
+
+undeploy: 
+	helm uninstall $(service)

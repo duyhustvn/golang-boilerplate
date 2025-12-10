@@ -102,9 +102,16 @@ config:
         insecure_skip_verify: true
 
     # https://github.com/influxdata/telegraf/tree/master/plugins/inputs/kube_inventory 
-    # - kube_inventory:
-    #     namespace: ""
-    #     bearer_token: "/var/run/secrets/kubernetes.io/serviceaccount/token"
+    - kube_inventory:
+        namespace: ""
+        bearer_token: "/var/run/secrets/kubernetes.io/serviceaccount/token"
+    
+    - prometheus:
+        # https://github.com/influxdata/telegraf/tree/master/plugins/inputs/prometheus#configuration
+        metric_version: 1
+        # Scrape Pods
+        monitor_kubernetes_pods: true
+        monitor_kubernetes_pods_method: "annotations"
 
   outputs:
     # - file: 

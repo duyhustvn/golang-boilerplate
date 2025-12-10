@@ -13,5 +13,18 @@ services:
     volumes:
       - influxdb_data:/var/lib/influxdb
 
+  chronograf:
+    image: chronograf:1.10 
+    container_name: chronograf
+    ports:
+      - "8888:8888"
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_USERNAME={{ influxdb_username }}
+      - INFLUXDB_PASSWORD={{ influxdb_pass }}
+    restart: always
+
 volumes:
   influxdb_data:
