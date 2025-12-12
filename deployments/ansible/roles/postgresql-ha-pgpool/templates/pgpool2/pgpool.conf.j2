@@ -83,7 +83,7 @@ pcp_port = 9898
 # - Backend Connection Settings -
 
 {% for host in groups['all'] %}
-backend_hostname{{ loop.index0 }} = '{{ hostvars[host]['node_ip'] }}'
+backend_hostname{{ loop.index0 }} = '{{ hostvars[host]['ansible_host'] }}'
                                    # Host name or IP address to connect to for backend {{ loop.index0 }}
 backend_port{{ loop.index0 }} = 5432
                                    # Port number for backend {{ loop.index0 }}
@@ -95,7 +95,7 @@ backend_flag{{ loop.index0 }} = 'ALLOW_TO_FAILOVER'
                                    # Controls various backend behavior
                                    # ALLOW_TO_FAILOVER, DISALLOW_TO_FAILOVER
                                    # or ALWAYS_PRIMARY
-backend_application_name{{ loop.index0 }} = '{{ hostvars[host]['node_ip'] }}'
+backend_application_name{{ loop.index0 }} = '{{ hostvars[host]['ansible_host'] }}'
                                    # walsender's application_name, used for "show pool_nodes" command
 
 {% endfor %}
@@ -713,7 +713,7 @@ use_watchdog = on
 # - Watchdog communication Settings -
 
 {% for host in groups['all'] %}
-hostname{{ loop.index0 }} = '{{ hostvars[host]['node_ip'] }}'
+hostname{{ loop.index0 }} = '{{ hostvars[host]['ansible_host'] }}'
                                     # Host name or IP address of pgpool node
                                     # for watchdog connection
                                     # (change requires restart)
@@ -857,7 +857,7 @@ wd_interval = 10
 # -- heartbeat mode --
 
 {% for host in groups['all'] %}
-heartbeat_hostname{{ loop.index0 }} = '{{ hostvars[host]['node_ip'] }}'
+heartbeat_hostname{{ loop.index0 }} = '{{ hostvars[host]['ansible_host'] }}'
                                     # Host name or IP address used
                                     # for sending heartbeat signal.
                                     # (change requires restart)
