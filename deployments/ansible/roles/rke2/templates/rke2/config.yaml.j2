@@ -1,4 +1,4 @@
-node-ip: {{ node_ip }}
+node-ip: {{ ansible_host }}
 node-name: {{ node_name }}
 {% if inventory_hostname != groups['rke2-master'][0] %}
 server: https://{{ hostvars[groups['rke2-master'][0]].ansible_host }}:9345
