@@ -1,6 +1,6 @@
 services:
   pgpool:
-    image: bitnamilegacy/pgpool:4.6.3
+    image: soldevelo/pgpool:4.6.3
     container_name: pgpool
     environment:
       - PGPOOL_BACKEND_NODES=0:192.168.56.111:5432,1:192.168.56.112:5432,2:192.168.56.113:5432
